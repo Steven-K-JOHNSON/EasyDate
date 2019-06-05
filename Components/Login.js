@@ -6,6 +6,10 @@ import LinearGradient from 'react-native-linear-gradient'
 
 class Login extends React.Component {
 
+  _tryToLogin() {
+    console.log("Yes")
+  }
+
   render() {
     return (
       // <View style={styles.main_container}>
@@ -23,10 +27,19 @@ class Login extends React.Component {
           source={require('../Images/logo_transparent.png')}
           style={styles.icon}/>
         <Text style={styles.default}>L’organisation facilitée de votre agenda personnel et professionnel</Text>
-        <View style={styles.textinput_container}>
-          <TextInput style={styles.textinput} placeholder='Login'/>
-          <TextInput style={styles.textinput} placeholder='Password'/>
-        </View>
+        <TextInput
+          style={styles.text_login}
+          placeholder='Login'
+          placeholderTextColor='#A6A6A6'
+          onSubmitEditing={() => { this.secondTextInput.focus(); }}
+          returnKeyType='next'/>
+        <TextInput
+          style={styles.text_password}
+          placeholder='Password'
+          placeholderTextColor='#A6A6A6'
+          secureTextEntry={true}
+          onSubmitEditing={this._tryToLogin}
+          ref={(input) => { this.secondTextInput = input; }}/>
       </LinearGradient>
     )
   }
@@ -43,7 +56,7 @@ const styles = StyleSheet.create({
     flex: 3
   },
   default: {
-    flex: 2,
+    flex: 1.5,
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 16,
@@ -53,15 +66,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10
   },
-  textinput: {
-    flex: 1,
-    borderRadius: 5,
-    borderColor: '#000000',
-    borderWidth: 1,
+  text_login: {
+    flex: 0.2,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    // opacity: 0.5,
+    margin: 10,
+    padding: 10,
   },
-  textinput_container: {
-    flex: 1,
-    margin: 10
+  text_password: {
+    flex: 0.2,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    // opacity: 0.5,
+    margin: 10,
+    marginBottom: 30,
+    padding: 10,
   }
 })
 
