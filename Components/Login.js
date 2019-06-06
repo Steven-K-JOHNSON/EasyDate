@@ -2,26 +2,22 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, TextInput } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import Calendar from './Calendar'
 
 
 class Login extends React.Component {
 
+  constructor(props) {
+    super(props)
+  }
+
   _tryToLogin() {
     console.log("Yes")
+    this.props.navigation.navigate('Calendar')
   }
 
   render() {
     return (
-      // <View style={styles.main_container}>
-      //   <Image
-      //     source={require('../Images/logo_transparent.png')}
-      //     style={styles.icon}/>
-      //   <Text style={styles.default}>Hey</Text>
-      //   <View style={styles.textinput_container}>
-      //     <TextInput style={styles.textinput} placeholder='Login'/>
-      //     <TextInput style={styles.textinput} placeholder='Password'/>
-      //   </View>
-      // </View>
       <LinearGradient colors={['#79DDFC', '#0079D6']} style={styles.main_container}>
         <Image
           source={require('../Images/logo_transparent.png')}
@@ -38,7 +34,7 @@ class Login extends React.Component {
           placeholder='Password'
           placeholderTextColor='#A6A6A6'
           secureTextEntry={true}
-          onSubmitEditing={this._tryToLogin}
+          onSubmitEditing={() => this._tryToLogin()}
           ref={(input) => { this.secondTextInput = input; }}/>
       </LinearGradient>
     )

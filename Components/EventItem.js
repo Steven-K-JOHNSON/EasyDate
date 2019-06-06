@@ -5,79 +5,96 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions }
 class EventItem extends React.Component {
 
   render() {
+    const { event } = this.props
     return (
       <TouchableOpacity
         style={styles.main_container}>
-        onPress={() => }
         <Image
             style={styles.image}
-            source={{uri: getImageFromApi(film.poster_path)}}
-          />
-          <View style={styles.content_container}>
-            <View style={styles.header_container}>
-              <Text style={styles.title_text}>{film.title}</Text>
-              <Text style={styles.vote_text}>{film.vote_average}</Text>
-            </View>
-            <View style={styles.description_container}>
-              <Text style={styles.description_text} numberOfLines={6}>{film.overview}</Text>
-            </View>
-            <View style={styles.date_container}>
-              <Text style={styles.date_text}>Sorti le 13/12/2017</Text>
-            </View>
+            source={require('../Images/formation.png')}
+        />
+        <View style={styles.content_container}>
+          <View style={styles.header_container}>
+            <Text style={styles.title_text}>Formation UI designer </Text>
           </View>
-        </TouchableOpacity>
+          <View style={styles.description_container}>
+            <Text style={styles.date}>17-19 Jui</Text>
+            <Text style={styles.number_people}>6 per.</Text>
+          </View>
+        </View>
+        <Image
+            style={styles.image_next}
+            source={require('../Images/next.png')}
+        />
+      </TouchableOpacity>
     )
   }
 }
 
 const styles = StyleSheet.create({
   main_container: {
-    height: 190,
-    flexDirection: 'row'
+    height: 120,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F4F4F4'
   },
   image: {
-    width: 120,
-    height: 180,
-    margin: 5
+    width: 80,
+    height: 80,
+    borderRadius: 80/2,
+    borderColor: '#000000',
+    borderWidth: 1,
+    margin: 10,
   },
   content_container: {
     flex: 1,
-    margin: 5
+    margin: 5,
   },
   header_container: {
-    flex: 3,
-    flexDirection: 'row'
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   title_text: {
     fontWeight: 'bold',
     fontSize: 20,
     flex: 1,
     flexWrap: 'wrap',
-    paddingRight: 5
-  },
-  vote_text: {
-    fontWeight: 'bold',
-    fontSize: 26,
-    color: '#666666'
+    paddingRight: 5,
+    textAlign: 'center'
   },
   description_container: {
-    flex: 7
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  description_text: {
-    fontStyle: 'italic',
-    color: '#666666'
+  date: {
+    // fontStyle: 'italic',
+    color: '#666666',
+    textAlign: 'center',
+    fontSize: 16,
+    flex: 1,
+    margin: 5
   },
-  date_container: {
-    flex: 1
+  number_people: {
+    // fontWeight: 'bold',
+    color: '#666666',
+    textAlign: 'center',
+    fontSize: 16,
+    flex: 1,
+    margin: 5
   },
-  date_text: {
-    textAlign: 'right',
-    fontSize: 14
-  },
-  favorite_image: {
-    width: 25,
-    height: 25,
-    marginRight: 5
+  image_next: {
+    width: 30,
+    height: 30,
+    margin: 10
+
+    // borderRadius: 80/2,
+    // borderColor: '#000000',
+    // margin: 10,
   }
 })
 
