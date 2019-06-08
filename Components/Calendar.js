@@ -32,7 +32,6 @@ class Calendar extends React.Component {
     }
   }
 
-
   render() {
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>

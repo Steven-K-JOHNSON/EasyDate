@@ -1,8 +1,11 @@
 // Components/FilmDetail.js
 
 import React from 'react'
-import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, Share, Alert, Platform, Button } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import allEvents from '../TMP/mock'
+import allPeoples from '../TMP/peopleData'
+import PeopleItem from './PeopleItem'
 
 class EventDetail extends React.Component {
 
@@ -10,6 +13,7 @@ class EventDetail extends React.Component {
     super(props)
     this.state = {
       event: undefined,
+      peoples: allPeoples,
       isLoading: true
     }
   }
@@ -18,7 +22,6 @@ class EventDetail extends React.Component {
     this.setState({ isLoading: true })
 
     const data = allEvents.find((item) => item.id === this.props.navigation.state.params.idEvent)
-
     this.setState({
       event: data,
       isLoading: false
@@ -35,23 +38,50 @@ class EventDetail extends React.Component {
     }
   }
 
-  _displayFilm() {
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: 1,
+          backgroundColor: "#CED0CE",
+          marginLeft: "14%"
+        }}
+      />
+    )
+  }
+
+  _displayEvent() {
     const { event } = this.state
     if (event != undefined) {
       return (
-        <ScrollView style={styles.scrollview_container}>
+        <ScrollView
+          style={styles.scrollview_container}
+          contentContainerStyle={styles.scrollview_content_container}>
           <Image
             style={styles.image}
             source={event.image}
           />
           <Text style={styles.title_text}>{event.title}</Text>
-          <Text style={styles.description_text}></Text>
-          <Text style={styles.default_text}></Text>
-          <Text style={styles.default_text}></Text>
-          <Text style={styles.default_text}></Text>
-          <Text style={styles.default_text}></Text>
-          <Text style={styles.default_text}></Text>
-          <Text style={styles.default_text}></Text>
+          <View style={styles.date_people_container}>
+            <Text style={styles.date}>6-7 Jui</Text>
+            <Text style={styles.people}>9. pers</Text>
+          </View>
+          <Text style={styles.description}>{event.overview}</Text>
+          <Text style={styles.detail}>Participe à l'évènement</Text>
+          <FlatList
+            style={styles.list}
+            horizontal={true}
+            data={allPeoples}
+            itemSeparatorComponent={this.renderSeparator}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({item}) => (
+              <PeopleItem
+                people={item}
+              />
+            )}>
+
+          </FlatList>
         </ScrollView>
       )
     }
@@ -59,10 +89,10 @@ class EventDetail extends React.Component {
 
   render() {
     return (
-      <View style={styles.main_container}>
+      <LinearGradient colors={['#FFFFFF', '#DB5A5A']} style={styles.main_container}>
         {this._displayLoading()}
-        {this._displayFilm()}
-      </View>
+        {this._displayEvent()}
+      </LinearGradient>
     )
   }
 }
@@ -70,6 +100,12 @@ class EventDetail extends React.Component {
 const styles = StyleSheet.create({
   main_container: {
     flex: 1,
+    flexDirection: 'column',
+  },
+  scrollview_container: {
+    flex: 1,
+  },
+  scrollview_content_container: {
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -82,41 +118,54 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  scrollview_container: {
-    flex: 1,
-  },
   image: {
     height: 180,
     width: 180,
     borderRadius: 180/2,
-    margin: 5
+    borderWidth: 1,
+    margin: 15
   },
   title_text: {
-    fontWeight: 'bold',
-    fontSize: 35,
-    flex: 1,
+    fontSize: 20,
     flexWrap: 'wrap',
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 10,
-    marginBottom: 10,
-    color: '#000000',
-    textAlign: 'center'
+    margin: 10,
+    textAlign: 'center',
+    color: '#DB5A5A',
+    fontWeight: 'bold'
   },
-  favorite_container: {
+  date_people_container: {
+    flex: 1,
+    margin: 15,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  description_text: {
-    fontStyle: 'italic',
-    color: '#666666',
-    margin: 5,
-    marginBottom: 15
+  date: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 15
   },
-  default_text: {
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 5,
+  people: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 15
   },
+  description: {
+    flex: 1,
+    margin: 15,
+    textAlign: 'center',
+    lineHeight: 20,
+    fontSize: 13
+  },
+  list: {
+    flex: 1,
+    margin: 10
+  },
+  detail: {
+    marginTop: 10,
+    fontWeight: 'bold',
+    fontSize: 20
+  }
 })
 
 export default EventDetail

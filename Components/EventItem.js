@@ -20,7 +20,7 @@ class EventItem extends React.Component {
           </View>
           <View style={styles.description_container}>
             <Text style={styles.date}>17-19 Jui</Text>
-            <Text style={styles.number_people}>6 per.</Text>
+            <Text style={styles.people}>6 per.</Text>
           </View>
         </View>
         <Image
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 5
   },
-  number_people: {
+  people: {
     // fontWeight: 'bold',
     color: '#666666',
     textAlign: 'center',
