@@ -3,6 +3,7 @@ import { StyleSheet, View, TextInput, Button, Text, FlatList, ActivityIndicator,
 import EventItem from './EventItem'
 import EventList from './EventList'
 import LinearGradient from 'react-native-linear-gradient'
+import events from '../TMP/mock'
 
 class Calendar extends React.Component {
 
@@ -24,12 +25,21 @@ class Calendar extends React.Component {
 
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      events: events
+    }
+  }
+
 
   render() {
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
         <View style={styles.calendar}/>
         <EventList
+          events={this.state.events}
+          navigation={this.props.navigation}
         />
         {this._displayLoading()}
       </LinearGradient>

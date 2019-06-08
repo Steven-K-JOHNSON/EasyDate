@@ -5,6 +5,7 @@ import { StyleSheet, Image } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation'
 import Login from '../Components/Login'
 import Calendar from '../Components/Calendar'
+import EventDetail from '../Components/EventDetail'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
@@ -15,6 +16,9 @@ const LoginStackNavigator = createStackNavigator({
   },
   Calendar: {
     screen: Calendar,
+  },
+  EventDetail: {
+    screen: EventDetail,
   }
 })
 

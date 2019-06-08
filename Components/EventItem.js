@@ -5,17 +5,18 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions }
 class EventItem extends React.Component {
 
   render() {
-    const { event } = this.props
+    const { event, displayDetailForEvent } = this.props
     return (
       <TouchableOpacity
-        style={styles.main_container}>
+        style={styles.main_container}
+        onPress={() => displayDetailForEvent(event.id)}>
         <Image
             style={styles.image}
-            source={require('../Images/formation.png')}
+            source={event.image}
         />
         <View style={styles.content_container}>
           <View style={styles.header_container}>
-            <Text style={styles.title_text}>Formation UI designer </Text>
+            <Text style={styles.title_text}>{event.title}</Text>
           </View>
           <View style={styles.description_container}>
             <Text style={styles.date}>17-19 Jui</Text>

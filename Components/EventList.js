@@ -1,26 +1,31 @@
 import React from 'react'
 import { StyleSheet, FlatList } from 'react-native'
 import EventItem from './EventItem'
-import events from '../TMP/mock'
 
 class EventList extends React.Component {
 
-  // constructor() {
-  //   super(props)
-  //   this.state = {
-  //     events: []
-  //   }
-  // }
+  constructor(props) {
+    super(props)
+    this.state = {
+      events: []
+    }
+  }
+
+  _displayDetailForEvent = (idEvent) => {
+    // On a récupéré les informations de la navigation, on peut afficher le détail du film
+    this.props.navigation.navigate('EventDetail', {idEvent: idEvent})
+  }
 
   render() {
     return (
       <FlatList
         style={styles.list}
-        data={events}
+        data={this.props.events}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={(item) => (
+        renderItem={({item}) => (
           <EventItem
             event={item}
+            displayDetailForEvent={this._displayDetailForEvent}
           />
         )}
       />
