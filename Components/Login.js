@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { StyleSheet, View, Text, Image, TextInput } from 'react-native'
+import { StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Calendar from './Calendar'
 
@@ -26,13 +26,14 @@ class Login extends React.Component {
         <TextInput
           style={styles.text_login}
           placeholder='Login'
-          placeholderTextColor='#A6A6A6'
+          placeholderTextColor='#767676'
+          keyboardAppearance='dark'
           onSubmitEditing={() => { this.secondTextInput.focus(); }}
           returnKeyType='next'/>
         <TextInput
           style={styles.text_password}
           placeholder='Password'
-          placeholderTextColor='#A6A6A6'
+          placeholderTextColor='#767676'
           secureTextEntry={true}
           onSubmitEditing={() => this._tryToLogin()}
           ref={(input) => { this.secondTextInput = input; }}/>
@@ -65,16 +66,14 @@ const styles = StyleSheet.create({
   text_login: {
     flex: 0.2,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-    // opacity: 0.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     margin: 10,
     padding: 10,
   },
   text_password: {
     flex: 0.2,
     borderRadius: 10,
-    backgroundColor: '#FFFFFF',
-    // opacity: 0.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     margin: 10,
     marginBottom: 30,
     padding: 10,

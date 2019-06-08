@@ -159,7 +159,8 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    margin: 10
+    marginTop: 10,
+    marginBottom: 10
   },
   detail: {
     marginTop: 10,
