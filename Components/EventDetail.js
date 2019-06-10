@@ -38,19 +38,6 @@ class EventDetail extends React.Component {
     }
   }
 
-  renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: 1,
-          backgroundColor: "#CED0CE",
-          marginLeft: "14%"
-        }}
-      />
-    )
-  }
-
   _displayEvent() {
     const { event } = this.state
     if (event != undefined) {
@@ -62,7 +49,7 @@ class EventDetail extends React.Component {
             style={styles.image}
             source={event.image}
           />
-          <Text style={styles.title_text}>{event.title}</Text>
+          <Text style={[styles.title_text, {color: event.colorForBackground !== undefined ? event.colorForBackground : '#C6C6C6' }]}>{event.title}</Text>
           <View style={styles.date_people_container}>
             <Text style={styles.date}>6-7 Jui</Text>
             <Text style={styles.people}>9. pers</Text>
@@ -73,7 +60,6 @@ class EventDetail extends React.Component {
             style={styles.list}
             horizontal={true}
             data={allPeoples}
-            itemSeparatorComponent={this.renderSeparator}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => (
               <PeopleItem
@@ -87,13 +73,29 @@ class EventDetail extends React.Component {
     }
   }
 
+  /* A voir avec Thomas
+  !!
+  !!
+  !!
+  !!
+  !!
+  */
+
   render() {
-    return (
-      <LinearGradient colors={['#FFFFFF', '#DB5A5A']} style={styles.main_container}>
-        {this._displayLoading()}
-        {this._displayEvent()}
-      </LinearGradient>
-    )
+    const { event } = this.state
+    if (event != undefined) {
+      return (
+        <LinearGradient colors={['#FFFFFF', event.colorForBackground !== undefined ? event.colorForBackground : '#C6C6C6']} style={styles.main_container}>
+          {this._displayLoading()}
+          {this._displayEvent()}
+        </LinearGradient>
+      )
+    } else {
+      return (
+        <View>
+        </View>
+      )
+    }
   }
 }
 

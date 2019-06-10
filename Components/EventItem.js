@@ -16,11 +16,11 @@ class EventItem extends React.Component {
         />
         <View style={styles.content_container}>
           <View style={styles.header_container}>
-            <Text style={styles.title_text}>{event.title}</Text>
+            <Text style={[styles.title_text, {color: event.colorForBackground}]}>{event.title}</Text>
           </View>
           <View style={styles.description_container}>
             <Text style={styles.date}>17-19 Jui</Text>
-            <Text style={styles.people}>6 per.</Text>
+            <Text style={styles.people}>{event.people} pers.</Text>
           </View>
         </View>
         <Image
@@ -34,16 +34,17 @@ class EventItem extends React.Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    height: 120,
+    height: 100,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F4F4F4'
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    marginBottom: 2
   },
   image: {
-    width: 80,
-    height: 80,
-    borderRadius: 80/2,
+    width: 70,
+    height: 70,
+    borderRadius: 70/2,
     borderColor: '#000000',
     borderWidth: 1,
     margin: 10,
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   title_text: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 17,
     flex: 1,
     flexWrap: 'wrap',
     paddingRight: 5,
@@ -74,17 +75,17 @@ const styles = StyleSheet.create({
   },
   date: {
     // fontStyle: 'italic',
-    color: '#666666',
+    color: '#000000',
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
     flex: 1,
     margin: 5
   },
   people: {
     // fontWeight: 'bold',
-    color: '#666666',
+    color: '#000000',
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 14,
     flex: 1,
     margin: 5
   },

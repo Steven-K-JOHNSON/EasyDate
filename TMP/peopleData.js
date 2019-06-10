@@ -6,7 +6,7 @@ export default data = [
      avatar: require('../Images/dylan.png'),
      firstname: 'Dylan',
      lastname: 'Fernandes',
-     role: 'Chef projet'
+     role: 'Chef projet',
    },
   {
      id:2,

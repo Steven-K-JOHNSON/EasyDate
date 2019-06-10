@@ -2,7 +2,7 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Calendar from './Calendar'
+import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class Login extends React.Component {
@@ -13,7 +13,7 @@ class Login extends React.Component {
 
   _tryToLogin() {
     console.log("Yes")
-    this.props.navigation.navigate('Calendar')
+    this.props.navigation.navigate('HomePage')
   }
 
   render() {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     margin: 10,
-    marginBottom: 30, 
+    marginBottom: 30,
     padding: 10,
   },
 })

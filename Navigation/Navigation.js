@@ -4,18 +4,18 @@ import React from 'react'
 import { StyleSheet, Image } from 'react-native'
 import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation'
 import Login from '../Components/Login'
-import Calendar from '../Components/Calendar'
+import HomePage from '../Components/HomePage'
 import EventDetail from '../Components/EventDetail'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
-    screen: Login,
+    screen: HomePage,
     navigationOptions: {
       title: 'Login'
     }
   },
-  Calendar: {
-    screen: Calendar,
+  HomePage: {
+    screen: HomePage,
   },
   EventDetail: {
     screen: EventDetail,
@@ -23,8 +23,8 @@ const LoginStackNavigator = createStackNavigator({
 })
 
 const EasyDateTabNavigator = createBottomTabNavigator({
-  Calendar: {
-    screen: Calendar
+  HomePage: {
+    screen: HomePage
   }
 })
 
