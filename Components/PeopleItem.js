@@ -14,6 +14,7 @@ class PeopleItem extends React.Component {
         />
         <Text style={styles.name}>{people.lastname}</Text>
         <Text style={styles.name}>{people.firstname}</Text>
+        <Text style={styles.role}>{people.role}</Text>
       </TouchableOpacity>
     )
   }
@@ -21,11 +22,11 @@ class PeopleItem extends React.Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    height: 120,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
-    padding: 10
+    padding: 10,
+    flex: 1
     // borderRightWidth: 10,
     // borderColor: 'transparent'
   },
@@ -39,6 +40,9 @@ const styles = StyleSheet.create({
   },
   name: {
     flexWrap: 'wrap',
+  },
+  role: {
+    fontWeight: 'bold'
   }
 })
 
