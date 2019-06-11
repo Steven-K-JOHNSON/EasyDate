@@ -52,6 +52,7 @@ class HomePage extends React.Component {
   }
 
   render() {
+
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
         <Calendar
@@ -60,12 +61,14 @@ class HomePage extends React.Component {
           hideExtraDays={true}
           // markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}}}
           markingType={'period'}
-          markedDates={{
-            '2019-06-04': {startingDay: true, color: 'green', endingDay: true},
-            '2019-06-20': {textColor: 'green'},
-            '2019-06-22': {startingDay: true, color: '#DB5A5A'},
-            '2019-06-23': {endingDay: true, color: '#DB5A5A'},
-          }}
+          // markedDates={{
+          //   '2019-06-04': {startingDay: true, color: 'green', endingDay: true},
+          //   '2019-06-20': {textColor: 'green'},
+          //   '2019-06-22': {startingDay: true, color: '#000000'},
+          //   '2019-06-22': {startingDay: true, color: '#DB5A5A'},
+          //
+          //   '2019-06-23': {endingDay: true, color: '#DB5A5A'},
+          // }}
           theme={{
             calendarBackground: 'transparent',
             // textSectionTitleColor: '#b6c1cd',

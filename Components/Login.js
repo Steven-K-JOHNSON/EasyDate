@@ -4,16 +4,35 @@ import { StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button } 
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getUserByEAndP } from '../API/EasyDateAPI'
 
 class Login extends React.Component {
 
   constructor(props) {
     super(props)
+    this.login = ""
+    this.password = ""
+    this.state = {
+      user: undefined
+    }
   }
 
   _tryToLogin() {
-    console.log("Yes")
+    getUserByEAndP(this.login, this.password).then(data => {
+      console.log(data.data)
+      // this.setState({
+      //   user: data
+      // })
+    })
     this.props.navigation.navigate('HomePage')
+  }
+
+  _loginTextInputChange(text) {
+    this.login = text
+  }
+
+  _passwordTextInputChange(text) {
+    this.password = text
   }
 
   render() {
@@ -28,6 +47,7 @@ class Login extends React.Component {
             placeholderTextColor='#767676'
             keyboardAppearance='dark'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
+            onChangeText = {(text) => this._loginTextInputChange(text)}
             returnKeyType='next'/>
           <TextInput
             style={styles.text_password}
@@ -35,6 +55,7 @@ class Login extends React.Component {
             placeholderTextColor='#767676'
             secureTextEntry={true}
             onSubmitEditing={() => this._tryToLogin()}
+            onChangeText = {(text) => this._passwordTextInputChange(text)}
             ref={(input) => { this.secondTextInput = input; }}/>
         <Text style={styles.default}>L’organisation facilitée de votre agenda personnel et professionnel</Text>
       </LinearGradient>

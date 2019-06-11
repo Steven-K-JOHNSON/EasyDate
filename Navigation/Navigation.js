@@ -9,7 +9,7 @@ import EventDetail from '../Components/EventDetail'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
-    screen: HomePage,
+    screen: Login,
     navigationOptions: {
       title: 'Login'
     }
