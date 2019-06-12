@@ -24,14 +24,14 @@ class Login extends React.Component {
       } else {
         console.log('NOT GOOD')
 
-        Alert.alert(
-          'Identifiants incorrects',
-          'Veuillez réessayer.',
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          {cancelable: false},
-          );
+        // Alert.alert(
+        //   'Identifiants incorrects',
+        //   'Veuillez réessayer.',
+        //   [
+        //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+        //   ],
+        //   {cancelable: false},
+        //   );
       }
     }).catch(error => {
       // Je n'y rentre jamais meme lorsque l'appel n'est pas bon
@@ -39,7 +39,7 @@ class Login extends React.Component {
     })
 
     /* A RETIRER PHASE DEBUG */
-    // this.props.navigation.navigate('HomePage')
+    this.props.navigation.navigate('HomePage')
 
   }
 

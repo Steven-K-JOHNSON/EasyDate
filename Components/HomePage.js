@@ -37,11 +37,33 @@ class HomePage extends React.Component {
 
   }
 
+  _displayAllEvent() {
+    eventDisplay = {}
+
+    this.state.events.map((event) => {
+      if (event.start === event.end) {
+        eventDisplay[event.start] = { startingDay: true, endingDay: true , color: event.colorForBackground }
+      } else {
+        eventDisplay[event.start] = { startingDay: true, color: event.colorForBackground }
+        eventDisplay[event.end] = { endingDay: true, color: event.colorForBackground }
+      }
+
+
+
+    })
+
+    this.setState({
+      eventsCalendar: eventDisplay
+    })
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       events: events,
+      eventsCalendar: undefined
     }
+
     this._onDayPress = this._onDayPress.bind(this);
   }
 
@@ -52,8 +74,12 @@ class HomePage extends React.Component {
 
   }
 
+  componentWillMount() {
+    // Appel API pour recevoir tous les events d'un User
+    this._displayAllEvent()
+  }
+
   render() {
-    console.log(this.props.user)
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
         <Calendar
@@ -62,6 +88,7 @@ class HomePage extends React.Component {
           hideExtraDays={true}
           // markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}}}
           markingType={'period'}
+          markedDates={this.state.eventsCalendar}
           // markedDates={{
           //   '2019-06-04': {startingDay: true, color: 'green', endingDay: true},
           //   '2019-06-20': {textColor: 'green'},
