@@ -4,8 +4,9 @@ import EventItem from './EventItem'
 import EventList from './EventList'
 import LinearGradient from 'react-native-linear-gradient'
 import events from '../TMP/mock'
-import { Calendar, CalendarList, Agenda, LocaleConfig} from 'react-native-calendars'
-import {} from 'react-native-calendars';
+import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
+import { connect } from 'react-redux'
+
 
 LocaleConfig.locales['fr'] = {
   monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -52,7 +53,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-
+    console.log(this.props.user)
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
         <Calendar
@@ -139,4 +140,10 @@ const styles = StyleSheet.create({
   }
 })
 
-export default HomePage
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(HomePage)

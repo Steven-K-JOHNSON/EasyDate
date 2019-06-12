@@ -1,10 +1,11 @@
 
 import React from 'react'
-import { StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button } from 'react-native'
+import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getUserByEAndP } from '../API/EasyDateAPI'
+import { connect } from 'react-redux'
 
 class Login extends React.Component {
 
@@ -12,19 +13,34 @@ class Login extends React.Component {
     super(props)
     this.login = ""
     this.password = ""
-    this.state = {
-      user: undefined
-    }
   }
 
   _tryToLogin() {
     getUserByEAndP(this.login, this.password).then(data => {
-      console.log(data.data)
-      // this.setState({
-      //   user: data
-      // })
+      if (data.data[0].Id !== undefined) {
+          const action = { type: "LOGIN_USER", value: data.data[0] }
+          this.props.dispatch(action)
+          // this.props.navigation.navigate('HomePage')
+      } else {
+        console.log('NOT GOOD')
+
+        Alert.alert(
+          'Identifiants incorrects',
+          'Veuillez réessayer.',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          {cancelable: false},
+          );
+      }
+    }).catch(error => {
+      // Je n'y rentre jamais meme lorsque l'appel n'est pas bon
+      console.log(error)
     })
-    this.props.navigation.navigate('HomePage')
+
+    /* A RETIRER PHASE DEBUG */
+    // this.props.navigation.navigate('HomePage')
+
   }
 
   _loginTextInputChange(text) {
@@ -102,4 +118,10 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Login
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(Login)
