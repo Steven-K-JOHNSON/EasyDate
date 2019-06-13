@@ -4,6 +4,7 @@ const initialState = { user: undefined }
 
 function loginUser(state = initialState, action) {
   let nextState
+  
   switch (action.type) {
     case 'LOGIN_USER':
       nextState = {

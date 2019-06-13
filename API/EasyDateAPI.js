@@ -10,3 +10,21 @@ export function getUserByEAndP(mail, password) {
     password: password
   })
 }
+
+export function getUserByEAndP2(mail, password) {
+  return new Promise((resolve, reject) => {
+    axios.post(url + '/API/WEB/GET/User/getUserByEAndP', {
+      wsPassword: API_TOKEN,
+      mail: mail,
+      password: password
+    }).then(response => {
+      if (response.status === 401) {
+        reject(Error("UNAUTHORIZED"))
+      }
+
+      resolve(data)
+    }).catch(error => {
+      reject(error);
+    })
+  });
+}
