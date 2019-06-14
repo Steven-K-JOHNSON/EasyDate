@@ -40,17 +40,42 @@ class HomePage extends React.Component {
   _displayAllEvent() {
     eventDisplay = {}
 
-    this.state.events.map((event) => {
-      if (event.start === event.end) {
-        eventDisplay[event.start] = { startingDay: true, endingDay: true , color: event.colorForBackground }
-      } else {
-        eventDisplay[event.start] = { startingDay: true, color: event.colorForBackground }
-        eventDisplay[event.end] = { endingDay: true, color: event.colorForBackground }
-      }
+    // this.state.events.map((event) => {
+    //   if (event.start in eventDisplay) {
+    //     console.log(eventDisplay)
+    //   }
+    //
+    //   if (event.start === event.end) {
+    //     eventDisplay[event.start] = { startingDay: true, endingDay: true , color: event.colorForBackground }
+    //   } else {
+    //     eventDisplay[event.start] = { startingDay: true, color: event.colorForBackground }
+    //     eventDisplay[event.end] = { endingDay: true, color: event.colorForBackground }
+    //   }
+    //
+    //
+    //
+    // })
+
+    eventDisplay = {
+      '2019-06-14': {
+        periods: [
+          { startingDay: false, endingDay: true, color: '#5f9ea0' },
+          { startingDay: true, endingDay: false, color: '#ffa500' },
+          { startingDay: true, endingDay: false, color: '#f0e68c' },
+        ]
+      },
+      '2019-06-15': {
+        periods: [
+          { startingDay: false, endingDay: true, color: '#ffa500' },
+          { color: 'transparent' },
+          { startingDay: false, endingDay: false, color: '#f0e68c' },
+        ]
+      },
+    }
 
 
 
-    })
+
 
     this.setState({
       eventsCalendar: eventDisplay
@@ -87,7 +112,7 @@ class HomePage extends React.Component {
           onDayPress={this._onDayPress}
           hideExtraDays={true}
           // markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}}}
-          markingType={'period'}
+          markingType={'multi-period'}
           markedDates={this.state.eventsCalendar}
           // markedDates={{
           //   '2019-06-04': {startingDay: true, color: 'green', endingDay: true},
