@@ -6,6 +6,7 @@ import { createStackNavigator, createBottomTabNavigator, createAppContainer } fr
 import Login from '../Components/Login'
 import HomePage from '../Components/HomePage'
 import EventDetail from '../Components/EventDetail'
+import NewEvent from '../Components/NewEvent'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {

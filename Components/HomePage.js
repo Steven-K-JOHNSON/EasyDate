@@ -6,6 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import events from '../TMP/mock'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import { connect } from 'react-redux'
+import moment from 'moment'
 
 
 LocaleConfig.locales['fr'] = {
@@ -40,42 +41,69 @@ class HomePage extends React.Component {
   _displayAllEvent() {
     eventDisplay = {}
 
-    // this.state.events.map((event) => {
-    //   if (event.start in eventDisplay) {
-    //     console.log(eventDisplay)
-    //   }
-    //
-    //   if (event.start === event.end) {
-    //     eventDisplay[event.start] = { startingDay: true, endingDay: true , color: event.colorForBackground }
-    //   } else {
-    //     eventDisplay[event.start] = { startingDay: true, color: event.colorForBackground }
-    //     eventDisplay[event.end] = { endingDay: true, color: event.colorForBackground }
-    //   }
-    //
-    //
-    //
-    // })
+    this.state.events.map((event) => {
 
-    eventDisplay = {
-      '2019-06-14': {
-        periods: [
-          { startingDay: false, endingDay: true, color: '#5f9ea0' },
-          { startingDay: true, endingDay: false, color: '#ffa500' },
-          { startingDay: true, endingDay: false, color: '#f0e68c' },
+      var currentDayOfEvent = moment(new Date(event.start))
+      var eventLineHeight = 0
+      var allDateOfEvent = [
+        currentDayOfEvent.format('YYYY-MM-DD')
+      ]
+
+      console.log("Création du tableau des jours")
+      while (currentDayOfEvent.format('YYYY-MM-DD') !== event.end) {
+        currentDayOfEvent.add(1, 'days')
+        allDateOfEvent = [
+          ...allDateOfEvent,
+          currentDayOfEvent.format('YYYY-MM-DD')
         ]
-      },
-      '2019-06-15': {
-        periods: [
-          { startingDay: false, endingDay: true, color: '#ffa500' },
-          { color: 'transparent' },
-          { startingDay: false, endingDay: false, color: '#f0e68c' },
-        ]
-      },
-    }
+      }
 
+      console.log("Vérification de la place dans le calendrier")
+      var placeInCalendarFounded = false
+      while(!placeInCalendarFounded) {
+        for (var i = 0; i < allDateOfEvent.length; i++) {
+          if (allDateOfEvent[i] in eventDisplay
+              && eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] !== undefined
+              && eventDisplay[allDateOfEvent[i]].periods[eventLineHeight].color !== 'transparent') {
+            eventLineHeight++
+            break
+          }
+          if (i === allDateOfEvent.length - 1) {
+            placeInCalendarFounded = true
+          }
+        }
+      }
+      console.log("Fin de vérification")
 
+      allDateOfEvent.map(date => {
+        if (!(date in eventDisplay)) {
+          eventDisplay[date] = {
+            periods: []
+          }
+        }
+      })
 
+      for (var i = 0; i < allDateOfEvent.length; i++) {
+        console.log("FOR")
+        if (event.start === event.end) {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: event.colorForBackground }
+        } else if (allDateOfEvent[i] === event.start) {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: event.colorForBackground }
+        } else if (allDateOfEvent[i] === event.end) {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: event.colorForBackground }
+        } else {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: event.colorForBackground }
+        }
+      }
 
+      allDateOfEvent.map(date => {
+        for (var i = 0; i < eventLineHeight; i++) {
+          if (eventDisplay[date].periods[i] === undefined) {
+            eventDisplay[date].periods[i] = { color: 'transparent' }
+          }
+        }
+      })
+    })
 
     this.setState({
       eventsCalendar: eventDisplay
@@ -114,14 +142,6 @@ class HomePage extends React.Component {
           // markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}}}
           markingType={'multi-period'}
           markedDates={this.state.eventsCalendar}
-          // markedDates={{
-          //   '2019-06-04': {startingDay: true, color: 'green', endingDay: true},
-          //   '2019-06-20': {textColor: 'green'},
-          //   '2019-06-22': {startingDay: true, color: '#000000'},
-          //   '2019-06-22': {startingDay: true, color: '#DB5A5A'},
-          //
-          //   '2019-06-23': {endingDay: true, color: '#DB5A5A'},
-          // }}
           theme={{
             calendarBackground: 'transparent',
             // textSectionTitleColor: '#b6c1cd',

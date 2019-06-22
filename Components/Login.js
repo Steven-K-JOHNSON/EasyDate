@@ -61,7 +61,6 @@ class Login extends React.Component {
             style={styles.text_login}
             placeholder='Login'
             placeholderTextColor='#767676'
-            keyboardAppearance='dark'
             onSubmitEditing={() => { this.secondTextInput.focus(); }}
             onChangeText = {(text) => this._loginTextInputChange(text)}
             returnKeyType='next'/>

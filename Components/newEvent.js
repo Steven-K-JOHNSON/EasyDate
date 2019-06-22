@@ -1,8 +1,10 @@
 import React from 'react'
-import { StyleSheet, FlatList } from 'react-native'
+import { StyleSheet, FlatList, TextInput, View, Text } from 'react-native'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
+import LinearGradient from 'react-native-linear-gradient'
+import DateTimePicker from "react-native-modal-datetime-picker"
 
-class newEvent extends React.Component {
+class NewEvent extends React.Component {
 
   constructor(props) {
     super(props)
@@ -65,6 +67,18 @@ class newEvent extends React.Component {
           //   '2019-06-22': {disabled: true, disableTouchEvent: true}
           // }}
         />
+        <View style={styles.hour_container}>
+          <DateTimePicker
+            isVisible={true}
+          />
+          <DateTimePicker/>
+          <Text>Hello</Text>
+        </View>
+        <TextInput
+          style={styles.text_search_people}
+          placeholder="Ajouter des personnes à l'évènement"
+          placeholderTextColor='#767676'
+          returnKeyType='next'/>
       </LinearGradient>
     )
   }
@@ -77,6 +91,18 @@ const styles = StyleSheet.create({
   calendar: {
     flex: 1.3,
   },
+  hour_container: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  text_search_people: {
+    flex: 0.2,
+    textAlign: 'center',
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    margin: 10,
+    padding: 10,
+  }
 })
 
-export default newEvent
+export default NewEvent
