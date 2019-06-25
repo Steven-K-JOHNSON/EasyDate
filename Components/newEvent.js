@@ -2,14 +2,15 @@ import React from 'react'
 import { StyleSheet, FlatList, TextInput, View, Text } from 'react-native'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import LinearGradient from 'react-native-linear-gradient'
-import DateTimePicker from "react-native-modal-datetime-picker"
+import DateTimePicker from 'react-native-modal-datetime-picker'
+import InvitedPeopleList from './EventList'
 
 class NewEvent extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      events: []
+      invitedPeople: []
     }
   }
 
@@ -27,7 +28,6 @@ class NewEvent extends React.Component {
           hideExtraDays={true}
           // markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedDotColor: 'orange'}}}
           markingType={'multi-period'}
-          markedDates={this.state.eventsCalendar}
           // markedDates={{
           //   '2019-06-04': {startingDay: true, color: 'green', endingDay: true},
           //   '2019-06-20': {textColor: 'green'},
@@ -51,27 +51,16 @@ class NewEvent extends React.Component {
             // indicatorColor: 'blue',
             textDayHeaderFontWeight: 'normal',
             textMonthFontWeight: 'bold',
-            // textDayHeaderFontWeight: '300',
-            // textDayFontSize: 16,
-            // textMonthFontSize: 16,
-            // textDayHeaderFontSize: 16
+            'stylesheet.day.basic': {
+              base: {
+                alignItems: 'center',
+                paddingBottom: 5
+              },
+            }
           }}
-
-          // minDate={'2019-06-06'}
-          // hideArrows={true}
-          // Collection of dates that have to be marked. Default = {}
-          // markedDates={{
-          //   '2019-06-16': {selected: true, marked: true, selectedColor: 'blue'},
-          //   '2019-06-18': {marked: true},
-          //   '2019-06-20': {marked: true, dotColor: 'red', activeOpacity: 0},
-          //   '2019-06-22': {disabled: true, disableTouchEvent: true}
-          // }}
         />
         <View style={styles.hour_container}>
-          <DateTimePicker
-            isVisible={true}
-          />
-          <DateTimePicker/>
+
           <Text>Hello</Text>
         </View>
         <TextInput
@@ -79,6 +68,11 @@ class NewEvent extends React.Component {
           placeholder="Ajouter des personnes à l'évènement"
           placeholderTextColor='#767676'
           returnKeyType='next'/>
+        <InvitedPeopleList
+          style={styles.list}
+          invitedPeople={this.state.invitedPeople}
+          // navigation={this.props.navigation}
+        />
       </LinearGradient>
     )
   }
@@ -89,19 +83,22 @@ const styles = StyleSheet.create({
     flex: 1
   },
   calendar: {
-    flex: 1.3,
+    flex: 2,
   },
   hour_container: {
-    flex: 1,
+    flex: 0.5,
     flexDirection: 'row'
   },
   text_search_people: {
-    flex: 0.2,
+    flex: 0.1,
     textAlign: 'center',
     borderRadius: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     margin: 10,
     padding: 10,
+  },
+  list: {
+    flex: 1
   }
 })
 

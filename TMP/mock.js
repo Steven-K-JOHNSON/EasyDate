@@ -31,8 +31,8 @@ export default data = [
      people: 2,
      overview:"Nouvel épisode de la saga. Les héros du Réveil de la force rejoignent les figures légendaires de la galaxie dans une aventure épique qui révèle des secrets ancestraux sur la Force et entraîne de choquantes révélations sur le passé…",
      colorForBackground: '#9C6BE7',
-     start: '2019-06-08',
-     end: '2019-06-08'
+     start: '2019-06-02',
+     end: '2019-06-05'
   },
   // {
   //    id:181811,

@@ -1,6 +1,9 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions } from 'react-native'
 // import FadeIn from '../Animations/FadeIn'
+import moment from 'moment'
+
+const month = ['Janv.', 'Fev.', 'Mars', 'Avril', 'Mai', 'Juin', 'Jui.', 'Aout', 'Sep.', 'Oct.', 'Nov.', 'Dec']
 
 class EventItem extends React.Component {
 
@@ -19,7 +22,7 @@ class EventItem extends React.Component {
             <Text style={[styles.title_text, {color: event.colorForBackground}]}>{event.title}</Text>
           </View>
           <View style={styles.description_container}>
-            <Text style={styles.date}>17-19 Jui</Text>
+            <Text style={styles.date}>{moment(new Date(event.start)).format('DD')} {month[moment(new Date(event.start)).format('M') - 1]} -{"\n"}{moment(new Date(event.end)).format('DD')} {month[moment(new Date(event.end)).format('M') - 1]}</Text>
             <Text style={styles.people}>{event.people} pers.</Text>
           </View>
         </View>

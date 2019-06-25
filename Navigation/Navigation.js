@@ -10,7 +10,7 @@ import NewEvent from '../Components/NewEvent'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
-    screen: HomePage,
+    screen: NewEvent,
     navigationOptions: {
       title: 'Login'
     }

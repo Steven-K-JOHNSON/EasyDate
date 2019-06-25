@@ -6,6 +6,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import allEvents from '../TMP/mock'
 import allPeoples from '../TMP/peopleData'
 import PeopleItem from './PeopleItem'
+import moment from 'moment'
+
+const month = ['Janv.', 'Fev.', 'Mars', 'Avril', 'Mai', 'Juin', 'Jui.', 'Aout', 'Sep.', 'Oct.', 'Nov.', 'Dec']
 
 class EventDetail extends React.Component {
 
@@ -51,8 +54,8 @@ class EventDetail extends React.Component {
           />
           <Text style={[styles.title_text, {color: event.colorForBackground !== undefined ? event.colorForBackground : '#C6C6C6' }]}>{event.title}</Text>
           <View style={styles.date_people_container}>
-            <Text style={styles.date}>6-7 Jui</Text>
-            <Text style={styles.people}>9. pers</Text>
+            <Text style={styles.date}>{moment(new Date(event.start)).format('DD')} {month[moment(new Date(event.start)).format('M') - 1]} -{"\n"}{moment(new Date(event.end)).format('DD')} {month[moment(new Date(event.end)).format('M') - 1]}</Text>
+            <Text style={styles.people}>{event.people} pers.</Text>
           </View>
           <Text style={styles.description}>{event.overview}</Text>
           <Text style={styles.detail}>Participe à l'évènement</Text>
