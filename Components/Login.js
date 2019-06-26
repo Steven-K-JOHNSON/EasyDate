@@ -20,7 +20,7 @@ class Login extends React.Component {
       if (data.data[0].Id !== undefined) {
           const action = { type: "LOGIN_USER", value: data.data[0] }
           this.props.dispatch(action)
-          this.props.navigation.navigate('HomePage')
+          // this.props.navigation.navigate('HomePage')
       } else {
         console.log('NOT GOOD')
 
@@ -39,7 +39,7 @@ class Login extends React.Component {
     })
 
     /* A RETIRER PHASE DEBUG */
-    // this.props.navigation.navigate('HomePage')
+    this.props.navigation.navigate('HomePage')
 
   }
 
