@@ -62,7 +62,7 @@ class EventDetail extends React.Component {
           <FlatList
             style={styles.list}
             horizontal={true}
-            data={allPeoples}
+            data={this.state.peoples}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({item}) => (
               <PeopleItem

@@ -6,9 +6,9 @@ class EventList extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      events: []
-    }
+    // this.state = {
+    //   events: []
+    // }
   }
 
   _displayDetailForEvent = (idEvent) => {

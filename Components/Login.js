@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Bu
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getUserByEAndP } from '../API/EasyDateAPI'
+import { getUserByEAndP, insertUser } from '../API/EasyDateAPI'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {
@@ -16,27 +16,28 @@ class Login extends React.Component {
   }
 
   _tryToLogin() {
-    getUserByEAndP(this.login, this.password).then(data => {
-      if (data.data[0].Id !== undefined) {
-          const action = { type: "LOGIN_USER", value: data.data[0] }
-          this.props.dispatch(action)
-          // this.props.navigation.navigate('HomePage')
-      } else {
-        console.log('NOT GOOD')
-
-        // Alert.alert(
-        //   'Identifiants incorrects',
-        //   'Veuillez réessayer.',
-        //   [
-        //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-        //   ],
-        //   {cancelable: false},
-        //   );
-      }
-    }).catch(error => {
-      // Je n'y rentre jamais meme lorsque l'appel n'est pas bon
-      console.log(error)
-    })
+    // insertUser()
+    // getUserByEAndP(this.login, this.password).then(data => {
+    //   if (data.data[0].Id !== undefined) {
+    //     console.log("C'est GOOD")
+    //     const action = { type: "LOGIN_USER", value: data.data[0] }
+    //     this.props.dispatch(action)
+    //     this.props.navigation.navigate('HomePage')
+    //   } else {
+    //     console.log('NOT GOOD')
+    //
+    //     // Alert.alert(
+    //     //   'Identifiants incorrects',
+    //     //   'Veuillez réessayer.',
+    //     //   [
+    //     //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+    //     //   ],
+    //     //   {cancelable: false},
+    //     //   );
+    //   }
+    // }).catch(error => {
+    //   console.log(error)
+    // })
 
     /* A RETIRER PHASE DEBUG */
     this.props.navigation.navigate('HomePage')
@@ -51,7 +52,13 @@ class Login extends React.Component {
     this.password = text
   }
 
+  componentWillMount() {
+    console.log("Will Mount")
+    this.props.navigation.navigate('HomePage')
+  }
+
   render() {
+    console.log("Render")
     return (
       <LinearGradient colors={['#79DDFC', '#0079D6']} style={styles.main_container}>
         <Image
@@ -72,7 +79,7 @@ class Login extends React.Component {
             onSubmitEditing={() => this._tryToLogin()}
             onChangeText = {(text) => this._passwordTextInputChange(text)}
             ref={(input) => { this.secondTextInput = input; }}/>
-        <Text style={styles.default}>L’organisation facilitée de votre agenda personnel et professionnel</Text>
+        <Text style={styles.default}>L’organisation facilitée de votre agenda professionnel</Text>
       </LinearGradient>
     )
   }
