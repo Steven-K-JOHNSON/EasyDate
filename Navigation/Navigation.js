@@ -2,11 +2,12 @@
 
 import React from 'react'
 import { StyleSheet, Image } from 'react-native'
-import { createStackNavigator, createBottomTabNavigator, createAppContainer } from 'react-navigation'
+import { createStackNavigator, createBottomTabNavigator, createAppContainer, createSwitchNavigator } from 'react-navigation'
 import Login from '../Components/Login'
 import HomePage from '../Components/HomePage'
 import EventDetail from '../Components/EventDetail'
 import NewEvent from '../Components/NewEvent'
+import AuthLoadingScreen from '../Components/AuthLoadingScreen'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
@@ -14,7 +15,10 @@ const LoginStackNavigator = createStackNavigator({
     navigationOptions: {
       title: 'Login'
     }
-  },
+  }
+})
+
+const AppStackNavigator = createStackNavigator({
   HomePage: {
     screen: HomePage,
   },
@@ -23,17 +27,13 @@ const LoginStackNavigator = createStackNavigator({
   }
 })
 
-const EasyDateTabNavigator = createBottomTabNavigator({
-  HomePage: {
-    screen: HomePage
+export default createAppContainer(createSwitchNavigator(
+  {
+    AuthLoading: AuthLoadingScreen,
+    App: AppStackNavigator,
+    Auth: LoginStackNavigator,
+  },
+  {
+    initialRouteName: 'AuthLoading',
   }
-})
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 30,
-    height: 30
-  }
-})
-
-export default createAppContainer(LoginStackNavigator)
+))

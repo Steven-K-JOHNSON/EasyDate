@@ -1,11 +1,12 @@
 
 import React from 'react'
-import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button } from 'react-native'
+import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button, AsyncStorage } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getUserByEAndP, insertUser } from '../API/EasyDateAPI'
 import { connect } from 'react-redux'
+import CacheStore from 'react-native-cache-store'
 
 class Login extends React.Component {
 
@@ -40,8 +41,16 @@ class Login extends React.Component {
     // })
 
     /* A RETIRER PHASE DEBUG */
-    this.props.navigation.navigate('HomePage')
+    // this.props.navigation.navigate('HomePage')
+    //
+    // CacheStore.set('isLogin', true, 10)
+    // this.props.navigation.navigate('HomePage')
+  }
 
+  _signInAsync = async () => {
+    console.log("SignInAsync")
+    await AsyncStorage.setItem('userToken', 'abc');
+    this.props.navigation.navigate('App');
   }
 
   _loginTextInputChange(text) {
@@ -53,12 +62,16 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    console.log("Will Mount")
-    this.props.navigation.navigate('HomePage')
+    // console.log("Will Mount")
+    //
+    // CacheStore.get('isLogin').then(value => {
+    //   if(value != null) {
+    //     this.props.navigation.navigate('HomePage')
+    //   }
+    // })
   }
 
   render() {
-    console.log("Render")
     return (
       <LinearGradient colors={['#79DDFC', '#0079D6']} style={styles.main_container}>
         <Image
@@ -76,7 +89,7 @@ class Login extends React.Component {
             placeholder='Password'
             placeholderTextColor='#767676'
             secureTextEntry={true}
-            onSubmitEditing={() => this._tryToLogin()}
+            onSubmitEditing={() => this._signInAsync()}
             onChangeText = {(text) => this._passwordTextInputChange(text)}
             ref={(input) => { this.secondTextInput = input; }}/>
         <Text style={styles.default}>L’organisation facilitée de votre agenda professionnel</Text>
