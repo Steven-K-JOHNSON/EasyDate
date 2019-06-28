@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
   ActivityIndicator,
   AsyncStorage,
@@ -6,7 +6,8 @@ import {
   StyleSheet,
   View,
   Image
-} from 'react-native';
+} from 'react-native'
+import moment from 'moment'
 
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -16,14 +17,21 @@ class AuthLoadingScreen extends React.Component {
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = () => {
     setTimeout(async () => {
-        console.log("AuthLoadingScreen")
-        const userToken = await AsyncStorage.getItem('userToken');
+        const dateToken = await AsyncStorage.getItem('dateToken')
+        const dateToCheck = moment(dateToken).add(1, 'd')
+        const dateNow = moment(new Date())
+        console.log(dateNow.isAfter(dateToCheck))
+        if (dateNow.isAfter(dateToCheck)) {
+          await AsyncStorage.removeItem('dateToken')
+          await AsyncStorage.removeItem('userToken')
+        }
+        const userToken = await AsyncStorage.getItem('userToken')
+
 
         // This will switch to the App screen or Auth screen and this loading
         // screen will be unmounted and thrown away.
-        console.log(userToken ? 'App' : 'Auth')
         console.log(userToken)
-        this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+        this.props.navigation.navigate(userToken ? 'App' : 'Auth')
       },
       3000
     )

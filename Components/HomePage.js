@@ -7,7 +7,7 @@ import events from '../TMP/mock'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import { connect } from 'react-redux'
 import moment from 'moment'
-
+import { getEventByIdUser } from '../API/EasyDateAPI'
 
 LocaleConfig.locales['fr'] = {
   monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -34,8 +34,15 @@ class HomePage extends React.Component {
         }
     }
 
-  _displayLoading() {
+  constructor(props) {
+    super(props)
+    this.state = {
+      events: events,
+      eventsCalendar: undefined,
+      isLoading: true
+    }
 
+    this._onDayPress = this._onDayPress.bind(this);
   }
 
   _displayAllEvent() {
@@ -84,7 +91,6 @@ class HomePage extends React.Component {
       })
 
       for (var i = 0; i < allDateOfEvent.length; i++) {
-        console.log("FOR")
         if (event.start === event.end) {
           eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: event.colorForBackground }
         } else if (allDateOfEvent[i] === event.start) {
@@ -110,16 +116,6 @@ class HomePage extends React.Component {
     })
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      events: events,
-      eventsCalendar: undefined
-    }
-
-    this._onDayPress = this._onDayPress.bind(this);
-  }
-
   _onDayPress(day) {
     this.setState({
       selected: day.dateString
@@ -127,50 +123,64 @@ class HomePage extends React.Component {
 
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // Appel API pour recevoir tous les events d'un User
-    this._displayAllEvent()
+    console.log(this.props.user)
+    getEventByIdUser(this.props.user.id).then(date => {
+      this._displayAllEvent()
+      this.setState({
+        isLoading: false
+      })
+    })
   }
 
   render() {
-    return (
-      <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
-        <Calendar
-          style={styles.calendar}
-          onDayPress={this._onDayPress}
-          hideExtraDays={true}
-          markingType={'multi-period'}
-          markedDates={this.state.eventsCalendar}
-          // dayComponent={({date, state}) => {
-          //   return (<View><Text style={{textAlign: 'center', color: state === 'disabled' ? 'gray' : 'black'}}>{date.day}</Text></View>);
-          // }}
-          theme={{
-            calendarBackground: 'transparent',
-            selectedDayBackgroundColor: 'rgb(200, 20, 20)',
-            selectedDayTextColor: 'rgb(255, 255, 255)',
-            todayTextColor: 'rgb(40, 40, 255)',
-            dayTextColor: '#000000',
-            textDisabledColor: '#999999',
-            arrowColor: '#000000',
-            monthTextColor: '#000000',
-            textDayHeaderFontWeight: 'normal',
-            textMonthFontWeight: 'bold',
-            'stylesheet.day.basic': {
-              base: {
-                alignItems: 'center',
-                paddingBottom: 5
-              },
-            }
-          }}
-        />
-        <EventList
-          style={styles.list}
-          events={this.state.events}
-          navigation={this.props.navigation}
-        />
-        {this._displayLoading()}
-      </LinearGradient>
-    )
+    console.log(this.state.isLoading)
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.loading_container}>
+          <ActivityIndicator size='large' />
+        </View>
+      )
+    } else {
+      return (
+        <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
+          <Calendar
+            style={styles.calendar}
+            onDayPress={this._onDayPress}
+            hideExtraDays={true}
+            markingType={'multi-period'}
+            markedDates={this.state.eventsCalendar}
+            // dayComponent={({date, state}) => {
+            //   return (<View><Text style={{textAlign: 'center', color: state === 'disabled' ? 'gray' : 'black'}}>{date.day}</Text></View>);
+            // }}
+            theme={{
+              calendarBackground: 'transparent',
+              selectedDayBackgroundColor: 'rgb(200, 20, 20)',
+              selectedDayTextColor: 'rgb(255, 255, 255)',
+              todayTextColor: 'rgb(40, 40, 255)',
+              dayTextColor: '#000000',
+              textDisabledColor: '#999999',
+              arrowColor: '#000000',
+              monthTextColor: '#000000',
+              textDayHeaderFontWeight: 'normal',
+              textMonthFontWeight: 'bold',
+              'stylesheet.day.basic': {
+                base: {
+                  alignItems: 'center',
+                  paddingBottom: 5
+                },
+              }
+            }}
+          />
+          <EventList
+            style={styles.list}
+            events={this.state.events}
+            navigation={this.props.navigation}
+          />
+        </LinearGradient>
+      )
+    }
   }
 }
 

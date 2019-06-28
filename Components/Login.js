@@ -4,9 +4,10 @@ import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Bu
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getUserByEAndP, insertUser } from '../API/EasyDateAPI'
+import { getUserByEAndP } from '../API/EasyDateAPI'
 import { connect } from 'react-redux'
 import CacheStore from 'react-native-cache-store'
+import moment from 'moment'
 
 class Login extends React.Component {
 
@@ -18,39 +19,21 @@ class Login extends React.Component {
 
   _tryToLogin() {
     // insertUser()
-    // getUserByEAndP(this.login, this.password).then(data => {
-    //   if (data.data[0].Id !== undefined) {
-    //     console.log("C'est GOOD")
-    //     const action = { type: "LOGIN_USER", value: data.data[0] }
-    //     this.props.dispatch(action)
-    //     this.props.navigation.navigate('HomePage')
-    //   } else {
-    //     console.log('NOT GOOD')
-    //
-    //     // Alert.alert(
-    //     //   'Identifiants incorrects',
-    //     //   'Veuillez réessayer.',
-    //     //   [
-    //     //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //     //   ],
-    //     //   {cancelable: false},
-    //     //   );
-    //   }
-    // }).catch(error => {
-    //   console.log(error)
-    // })
-
-    /* A RETIRER PHASE DEBUG */
-    // this.props.navigation.navigate('HomePage')
-    //
-    // CacheStore.set('isLogin', true, 10)
-    // this.props.navigation.navigate('HomePage')
-  }
-
-  _signInAsync = async () => {
-    console.log("SignInAsync")
-    await AsyncStorage.setItem('userToken', 'abc');
-    this.props.navigation.navigate('App');
+    getUserByEAndP(this.login, this.password).then(data => {
+      console.log(data)
+      if (data.data[0].Id !== undefined) {
+        const action = { type: "LOGIN_USER", value: data.data[0] }
+        this.props.dispatch(action)
+        this.props.navigation.navigate('HomePage')
+        AsyncStorage.setItem('userToken', 'exist')
+        const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
+        AsyncStorage.setItem('dateToken', dateToken)
+      } else {
+        console.log('NOT GOOD')
+      }
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   _loginTextInputChange(text) {
@@ -62,13 +45,6 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    // console.log("Will Mount")
-    //
-    // CacheStore.get('isLogin').then(value => {
-    //   if(value != null) {
-    //     this.props.navigation.navigate('HomePage')
-    //   }
-    // })
   }
 
   render() {
@@ -89,7 +65,7 @@ class Login extends React.Component {
             placeholder='Password'
             placeholderTextColor='#767676'
             secureTextEntry={true}
-            onSubmitEditing={() => this._signInAsync()}
+            onSubmitEditing={() => this._tryToLogin()}
             onChangeText = {(text) => this._passwordTextInputChange(text)}
             ref={(input) => { this.secondTextInput = input; }}/>
         <Text style={styles.default}>L’organisation facilitée de votre agenda professionnel</Text>

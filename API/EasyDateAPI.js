@@ -26,31 +26,28 @@ export function getUserByEAndP(mail, password) {
       resolve(response)
     }).catch(error => {
       console.log(error)
-
       reject(error);
     })
   });
 }
 
-export function insertUser() {
-  axios.post('http://18.184.113.182:8091/API/WEB/SET/user/insertUser', {
-    AuthAPI: 'ab08edce-d6fa-4780-88bf-d1dd3ba02f56',
-    Id: 'f220da48-c3bd-4d7e-9d32-0ca1ffecdf3a',
-    PlayerName: 'Holla',
-    Name: 'HEYWAIYY',
-    LastName: 'Allo',
-    Email: 'BOULOTT.allo@gmail.com',
-    Password: 'damn',
-    Role: '2'
-  }, {
-    headers: {
-          'Content-Type': 'application/json',
-    }
-  }).then(data => {
-    console.log("THEN")
-    console.log(data)
-  }).catch(error => {
-    console.log("CATCH")
-    console.log(error)
+export function getEventByIdUser(id) {
+  return new Promise((resolve, reject) => {
+    axios.post(url + '/API/MOBILE/GET/other/getEventByIdUser', {
+      AuthAPI: AUTH_API,
+      Id: id
+    }, {
+      headers: {
+            'Content-Type': 'application/json',
+      }
+    }).then(data => {
+      console.log("THEN")
+      console.log(data)
+      resolve(response)
+    }).catch(error => {
+      console.log("CATCH")
+      console.log(error)
+      reject(error)
+    })
   })
 }
