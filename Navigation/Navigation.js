@@ -21,9 +21,15 @@ const LoginStackNavigator = createStackNavigator({
 const AppStackNavigator = createStackNavigator({
   HomePage: {
     screen: HomePage,
+    navigationOptions: {
+      title: 'Mes évènements'
+    }
   },
   EventDetail: {
     screen: EventDetail,
+    navigationOptions: {
+      title: 'Détail évènement'
+    }
   }
 })
 

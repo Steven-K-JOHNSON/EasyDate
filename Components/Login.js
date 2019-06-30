@@ -25,7 +25,7 @@ class Login extends React.Component {
         const action = { type: "LOGIN_USER", value: data.data[0] }
         this.props.dispatch(action)
         this.props.navigation.navigate('HomePage')
-        AsyncStorage.setItem('userToken', 'exist')
+        AsyncStorage.setItem('userToken', JSON.stringify(data.data[0]))
         const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
         AsyncStorage.setItem('dateToken', dateToken)
       } else {
@@ -79,8 +79,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   icon: {
-    width: 'auto',
-    height: 'auto',
+    alignSelf: 'center',
+    width: 180,
+    height: 180,
     margin: 10,
     flex: 3
   },
@@ -97,14 +98,14 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   text_login: {
-    flex: 0.2,
+    height: 40,
     borderRadius: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     margin: 10,
     padding: 10,
   },
   text_password: {
-    flex: 0.2,
+    height: 40,
     borderRadius: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     margin: 10,
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.loginUser.user
   }
 }
 

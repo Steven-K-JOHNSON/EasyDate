@@ -1,43 +1,73 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions, ActivityIndicator } from 'react-native'
 // import FadeIn from '../Animations/FadeIn'
 import moment from 'moment'
+import { connect } from 'react-redux'
+import { getUserByIdEvent } from '../API/EasyDateAPI'
 
 const month = ['Janv.', 'Fev.', 'Mars', 'Avril', 'Mai', 'Juin', 'Jui.', 'Aout', 'Sep.', 'Oct.', 'Nov.', 'Dec']
 
 class EventItem extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      numberParticipants: undefined,
+      isLoading: true
+    }
+  }
+
+  componentWillMount() {
+    const { event } = this.props
+    getUserByIdEvent(event.Id).then(data => {
+      this.setState({
+        numberParticipants: data.data.length,
+        isLoading: false
+      })
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
   render() {
     const { event, displayDetailForEvent } = this.props
-    return (
-      <TouchableOpacity
-        style={styles.main_container}
-        onPress={() => displayDetailForEvent(event.id)}>
-        <Image
-            style={styles.image}
-            source={event.image}
-        />
-        <View style={styles.content_container}>
-          <View style={styles.header_container}>
-            <Text style={[styles.title_text, {color: event.colorForBackground}]}>{event.title}</Text>
-          </View>
-          <View style={styles.description_container}>
-            <Text style={styles.date}>{moment(new Date(event.start)).format('DD')} {month[moment(new Date(event.start)).format('M') - 1]} -{"\n"}{moment(new Date(event.end)).format('DD')} {month[moment(new Date(event.end)).format('M') - 1]}</Text>
-            <Text style={styles.people}>{event.people} pers.</Text>
-          </View>
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.loading_container}>
+          <ActivityIndicator size='large' />
         </View>
-        <Image
-            style={styles.image_next}
-            source={require('../Images/next.png')}
-        />
-      </TouchableOpacity>
-    )
+      )
+    } else {
+      return (
+        <TouchableOpacity
+          style={styles.main_container}
+          onPress={() => displayDetailForEvent(event)}>
+          <Image
+              style={styles.image}
+              source={event.image}
+          />
+          <View style={styles.content_container}>
+            <View style={styles.header_container}>
+              <Text style={[styles.title_text, {color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }]}>{event.Title}</Text>
+            </View>
+            <View style={styles.description_container}>
+              <Text style={styles.date}>{moment(new Date(event.Start)).format('DD')} {month[moment(new Date(event.Start)).format('M') - 1]} - {moment(new Date(event.End)).format('DD')} {month[moment(new Date(event.End)).format('M') - 1]}</Text>
+              <Text style={styles.people}>{ this.state.numberParticipants } pers.</Text>
+            </View>
+          </View>
+          <Image
+              style={styles.image_next}
+              source={require('../Images/next.png')}
+          />
+        </TouchableOpacity>
+      )
+    }
   }
 }
 
 const styles = StyleSheet.create({
   main_container: {
-    height: 100,
+    height: 90,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -103,4 +133,10 @@ const styles = StyleSheet.create({
   }
 })
 
-export default EventItem
+const mapStateToProps = state => {
+  return {
+    typeEvent: state.api.typeEvent
+  }
+}
+
+export default connect(mapStateToProps)(EventItem)

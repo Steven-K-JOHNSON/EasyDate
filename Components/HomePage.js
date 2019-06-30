@@ -3,7 +3,6 @@ import { StyleSheet, View, TextInput, Button, Text, FlatList, ActivityIndicator,
 import EventItem from './EventItem'
 import EventList from './EventList'
 import LinearGradient from 'react-native-linear-gradient'
-import events from '../TMP/mock'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -21,7 +20,7 @@ LocaleConfig.defaultLocale = 'fr';
 class HomePage extends React.Component {
 
   static navigationOptions = () => {
-        if (Platform.OS === 'ios') {
+        // if (Platform.OS === 'ios') {
           return {
               headerRight: <TouchableOpacity
                               style={styles.add_touchable_headerrightbutton}>
@@ -31,33 +30,34 @@ class HomePage extends React.Component {
                             </TouchableOpacity>,
               headerLeft: null
           }
-        }
+        // }
     }
 
   constructor(props) {
     super(props)
     this.state = {
-      events: events,
+      events: [],
       eventsCalendar: undefined,
-      isLoading: true
+      isLoading: true,
+      refreshing: false
     }
 
     this._onDayPress = this._onDayPress.bind(this);
+    this._loadAllEvent = this._loadAllEvent.bind(this);
   }
 
   _displayAllEvent() {
     eventDisplay = {}
-
     this.state.events.map((event) => {
 
-      var currentDayOfEvent = moment(new Date(event.start))
+      var currentDayOfEvent = moment(new Date(event.Start))
       var eventLineHeight = 0
       var allDateOfEvent = [
         currentDayOfEvent.format('YYYY-MM-DD')
       ]
 
       console.log("Création du tableau des jours")
-      while (currentDayOfEvent.format('YYYY-MM-DD') !== event.end) {
+      while (!currentDayOfEvent.isSame(event.End, 'day')) {
         currentDayOfEvent.add(1, 'days')
         allDateOfEvent = [
           ...allDateOfEvent,
@@ -91,14 +91,14 @@ class HomePage extends React.Component {
       })
 
       for (var i = 0; i < allDateOfEvent.length; i++) {
-        if (event.start === event.end) {
-          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: event.colorForBackground }
-        } else if (allDateOfEvent[i] === event.start) {
-          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: event.colorForBackground }
-        } else if (allDateOfEvent[i] === event.end) {
-          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: event.colorForBackground }
+        if (event.Start.isSame(event.End, 'day')) {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }
+        } else if (moment(allDateOfEvent[i]).isSame(event.Start, 'day')) {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }
+        } else if (moment(allDateOfEvent[i]).isSame(event.End, 'day')) {
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }
         } else {
-          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: event.colorForBackground }
+          eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }
         }
       }
 
@@ -120,22 +120,35 @@ class HomePage extends React.Component {
     this.setState({
       selected: day.dateString
     }, () => console.log(this.state.selected));
-
   }
 
-  componentDidMount() {
-    // Appel API pour recevoir tous les events d'un User
-    console.log(this.props.user)
-    getEventByIdUser(this.props.user.id).then(date => {
-      this._displayAllEvent()
-      this.setState({
-        isLoading: false
+  _loadAllEvent() {
+    this.setState({
+      refreshing: true
+    }, () => {
+      getEventByIdUser(this.props.user.Id).then(data => {
+        data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
+
+        data.data.map(event => {
+          event.Start = moment(new Date(event.Start))
+          event.End = moment(new Date(event.End))
+        })
+        this.setState({
+          events: data.data,
+          isLoading: false,
+          refreshing: false
+        }, () => this._displayAllEvent()
+        )
       })
     })
   }
 
+  componentDidMount() {
+    // Appel API pour recevoir tous les events d'un User
+    this._loadAllEvent()
+  }
+
   render() {
-    console.log(this.state.isLoading)
     if (this.state.isLoading) {
       return (
         <View style={styles.loading_container}>
@@ -146,7 +159,7 @@ class HomePage extends React.Component {
       return (
         <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
           <Calendar
-            style={styles.calendar}
+            style={{ marginBottom: 15 }}
             onDayPress={this._onDayPress}
             hideExtraDays={true}
             markingType={'multi-period'}
@@ -165,17 +178,21 @@ class HomePage extends React.Component {
               monthTextColor: '#000000',
               textDayHeaderFontWeight: 'normal',
               textMonthFontWeight: 'bold',
+              textDayFontSize: 13,
+              textMonthFontSize: 14,
+              textDayHeaderFontSize: 14,
               'stylesheet.day.basic': {
                 base: {
                   alignItems: 'center',
-                  paddingBottom: 5
+                  paddingBottom: 2
                 },
               }
             }}
           />
           <EventList
-            style={styles.list}
             events={this.state.events}
+            loadAllEvent={this._loadAllEvent}
+            refreshing={this.state.refreshing}
             navigation={this.props.navigation}
           />
         </LinearGradient>
@@ -205,7 +222,7 @@ const styles = StyleSheet.create({
     height: 30
   },
   calendar: {
-    flex: 1.3,
+    flex: 2,
   },
   list: {
     flex: 1
@@ -214,7 +231,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.loginUser.user,
+    typeEvent: state.api.typeEvent
   }
 }
 
