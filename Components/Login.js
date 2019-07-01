@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button, AsyncStorage } from 'react-native'
+import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Button, AsyncStorage, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -15,10 +15,25 @@ class Login extends React.Component {
     super(props)
     this.login = ""
     this.password = ""
+    this.state = {
+      isLoading: false
+    }
+  }
+
+  _displayLoading() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.loading_container}>
+          <ActivityIndicator size='large' />
+        </View>
+      )
+    }
   }
 
   _tryToLogin() {
-    // insertUser()
+    this.setState({
+      isLoading: true
+    })
     getUserByEAndP(this.login, this.password).then(data => {
       console.log(data)
       if (data.data[0].Id !== undefined) {
@@ -28,6 +43,9 @@ class Login extends React.Component {
         AsyncStorage.setItem('userToken', JSON.stringify(data.data[0]))
         const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
         AsyncStorage.setItem('dateToken', dateToken)
+        this.setState({
+          isLoading: false
+        })
       } else {
         console.log('NOT GOOD')
       }
@@ -44,31 +62,43 @@ class Login extends React.Component {
     this.password = text
   }
 
+
+
+
   componentWillMount() {
   }
 
   render() {
     return (
       <LinearGradient colors={['#79DDFC', '#0079D6']} style={styles.main_container}>
-        <Image
-          source={require('../Images/logo_transparent.png')}
-          style={styles.icon}/>
-          <TextInput
-            style={styles.text_login}
-            placeholder='Login'
-            placeholderTextColor='#767676'
-            onSubmitEditing={() => { this.secondTextInput.focus(); }}
-            onChangeText = {(text) => this._loginTextInputChange(text)}
-            returnKeyType='next'/>
-          <TextInput
-            style={styles.text_password}
-            placeholder='Password'
-            placeholderTextColor='#767676'
-            secureTextEntry={true}
-            onSubmitEditing={() => this._tryToLogin()}
-            onChangeText = {(text) => this._passwordTextInputChange(text)}
-            ref={(input) => { this.secondTextInput = input; }}/>
-        <Text style={styles.default}>L’organisation facilitée de votre agenda professionnel</Text>
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? "padding" : ""} style={styles.container}>
+            <View style={styles.logo_container}>
+              <Image
+                source={require('../Images/logo_transparent.png')}
+                style={styles.icon}/>
+            </View>
+            <View style={styles.login_container}>
+              <TextInput
+                style={styles.text_login}
+                placeholder='Login'
+                placeholderTextColor='#767676'
+                onSubmitEditing={() => { this.secondTextInput.focus() }}
+                onChangeText = {(text) => this._loginTextInputChange(text)}
+                returnKeyType='next'/>
+              <TextInput
+                style={styles.text_password}
+                placeholder='Password'
+                placeholderTextColor='#767676'
+                secureTextEntry={true}
+                onSubmitEditing={() => this._tryToLogin()}
+                onChangeText = {(text) => this._passwordTextInputChange(text)}
+                ref={(input) => { this.secondTextInput = input; }}/>
+            </View>
+            <View style={styles.little_text}>
+              <Text style={styles.default}>L’organisation facilitée de votre agenda personnel et professionnel</Text>
+            </View>
+        </KeyboardAvoidingView>
+        {this._displayLoading()}
       </LinearGradient>
     )
   }
@@ -78,21 +108,36 @@ const styles = StyleSheet.create({
   main_container: {
     flex: 1,
   },
+  container: {
+    flex: 1,
+    marginTop: 50
+  },
+  logo_container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1.5,
+    flex: 1
+  },
+  login_container: {
+    flexGrow: 1,
+    flex: 1,
+    justifyContent: 'center'
+  },
+  little_text: {
+    flexGrow: 1,
+    flex: 1
+  },
   icon: {
     alignSelf: 'center',
-    width: 180,
-    height: 180,
-    margin: 10,
-    flex: 3
+    width: 300,
+    height: 300
   },
   default: {
-    flex: 2,
+    height: 100,
     fontStyle: 'italic',
     fontWeight: 'normal',
     fontSize: 18,
     lineHeight: 33,
-    display: 'flex',
-    alignItems: 'center',
     textAlign: 'center',
     marginTop: 30,
     margin: 10,
@@ -100,18 +145,27 @@ const styles = StyleSheet.create({
   text_login: {
     height: 40,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     margin: 10,
     padding: 10,
   },
   text_password: {
     height: 40,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     margin: 10,
     marginBottom: 30,
     padding: 10,
   },
+  loading_container: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 80,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 })
 
 const mapStateToProps = state => {

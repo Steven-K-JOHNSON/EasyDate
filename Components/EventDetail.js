@@ -7,6 +7,7 @@ import PeopleItem from './PeopleItem'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { getUserByIdEvent } from '../API/EasyDateAPI'
+import { getImage } from '../Tools/ImageTools'
 
 const month = ['Janv.', 'Fev.', 'Mars', 'Avril', 'Mai', 'Juin', 'Jui.', 'Aout', 'Sep.', 'Oct.', 'Nov.', 'Dec']
 
@@ -27,7 +28,7 @@ class EventDetail extends React.Component {
 
     this.setState({
       event: this.props.navigation.state.params.event,
-      isLoading: false
+      isLoading: true
     }, () => {
       getUserByIdEvent(this.state.event.Id).then(data => {
         this.setState({
@@ -43,7 +44,6 @@ class EventDetail extends React.Component {
 
   _displayEvent() {
     const { event } = this.state
-    console.log(event)
     if (event != undefined) {
       if (this.state.isLoading) {
         return (
@@ -52,17 +52,19 @@ class EventDetail extends React.Component {
           </View>
         )
       } else {
+        const photoName = this.props.typeEvent.find((item) => item.Id === event.TypeId).Label
+        var icon = getImage(photoName)
         return (
           <ScrollView
             style={styles.scrollview_container}
             contentContainerStyle={styles.scrollview_content_container}>
             <Image
               style={styles.image}
-              source={require('../Images/formation.png')}
+              source={icon}
             />
             <Text style={[styles.title_text, {color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }]}>{event.Title}</Text>
             <View style={styles.date_people_container}>
-              <Text style={styles.date}>{moment(new Date(event.Start)).format('DD')} {month[moment(new Date(event.Start)).format('M') - 1]} -{"\n"}{moment(new Date(event.End)).format('DD')} {month[moment(new Date(event.End)).format('M') - 1]}</Text>
+              <Text style={styles.date}>{moment(new Date(event.Start)).format('DD')} {month[moment(new Date(event.Start)).format('M') - 1]} {moment(new Date(event.Start)).format('HH:mm')}{"\n"}{moment(new Date(event.End)).format('DD')} {month[moment(new Date(event.End)).format('M') - 1]} {moment(new Date(event.End)).format('HH:mm')}</Text>
               <Text style={styles.people}>{ this.state.numberParticipants } pers.</Text>
             </View>
             <Text style={styles.description}>{event.Description}</Text>

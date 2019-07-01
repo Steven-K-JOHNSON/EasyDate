@@ -11,10 +11,13 @@ import AuthLoadingScreen from '../Components/AuthLoadingScreen'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
-    screen: Login,
-    navigationOptions: {
-      title: 'Login'
-    }
+    screen: Login
+  }
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerVisible: false,
   }
 })
 
@@ -29,6 +32,12 @@ const AppStackNavigator = createStackNavigator({
     screen: EventDetail,
     navigationOptions: {
       title: 'Détail évènement'
+    }
+  },
+  NewEvent: {
+    screen: NewEvent,
+    navigationOptions: {
+      title: 'Ajout évènement'
     }
   }
 })

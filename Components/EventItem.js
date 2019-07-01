@@ -4,6 +4,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions, 
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { getUserByIdEvent } from '../API/EasyDateAPI'
+import { getImage } from '../Tools/ImageTools'
 
 const month = ['Janv.', 'Fev.', 'Mars', 'Avril', 'Mai', 'Juin', 'Jui.', 'Aout', 'Sep.', 'Oct.', 'Nov.', 'Dec']
 
@@ -38,13 +39,16 @@ class EventItem extends React.Component {
         </View>
       )
     } else {
+      const photoName = this.props.typeEvent.find((item) => item.Id === event.TypeId).Label
+      var icon = getImage(photoName)
+
       return (
         <TouchableOpacity
           style={styles.main_container}
           onPress={() => displayDetailForEvent(event)}>
           <Image
               style={styles.image}
-              source={event.image}
+              source={icon}
           />
           <View style={styles.content_container}>
             <View style={styles.header_container}>

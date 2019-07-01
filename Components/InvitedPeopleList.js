@@ -30,7 +30,7 @@ class InvitedPeopleList extends React.Component {
     console.log(id)
     this.setState({
       invitedPeople: [
-        ... this.state.invitedPeople, { id: id, avatar: require('../Images/dylan.png'), firstname: 'Louis', lastname: 'Mantopoulos', role: 'Chef yep'}
+        ... this.state.invitedPeople, { id: id, avatar: require('../Images/default_people.png'), firstname: 'Louis', lastname: 'Mantopoulos', role: 'Chef yep'}
       ]
     })
   }

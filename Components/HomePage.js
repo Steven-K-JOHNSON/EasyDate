@@ -19,16 +19,17 @@ LocaleConfig.defaultLocale = 'fr';
 
 class HomePage extends React.Component {
 
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
         // if (Platform.OS === 'ios') {
+        console.log(this.props)
           return {
               headerRight: <TouchableOpacity
-                              style={styles.add_touchable_headerrightbutton}>
+                              style={styles.add_touchable_headerrightbutton}
+                              onPress={() => navigation.navigate('NewEvent')}>
                               <Image
                                 style={styles.add_event}
                                 source={require('../Images/add_button.png')} />
-                            </TouchableOpacity>,
-              headerLeft: null
+                            </TouchableOpacity>
           }
         // }
     }
@@ -128,10 +129,9 @@ class HomePage extends React.Component {
     }, () => {
       getEventByIdUser(this.props.user.Id).then(data => {
         data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
-
         data.data.map(event => {
-          event.Start = moment(new Date(event.Start))
-          event.End = moment(new Date(event.End))
+          event.Start = moment(new Date(event.Start)).subtract(2, 'h')
+          event.End = moment(new Date(event.End)).subtract(2, 'h')
         })
         this.setState({
           events: data.data,
@@ -156,6 +156,7 @@ class HomePage extends React.Component {
         </View>
       )
     } else {
+      console.log(this.props)
       return (
         <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
           <Calendar

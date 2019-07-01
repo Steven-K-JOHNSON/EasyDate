@@ -24,7 +24,6 @@ export function getUserByEAndP(mail, password) {
 }
 
 export function getEventByIdUser(id) {
-  console.log(id)
   return new Promise((resolve, reject) => {
     axios.post(url + '/API/MOBILE/GET/other/getEventByIdUser', {
       AuthAPI: AUTH_API,
@@ -34,10 +33,8 @@ export function getEventByIdUser(id) {
             'Content-Type': 'application/json',
       }
     }).then(response => {
-      console.log(response)
       resolve(response)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })
@@ -52,10 +49,8 @@ export function getEventType() {
             'Content-Type': 'application/json',
       }
     }).then(response => {
-      console.log(response)
       resolve(response)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })
@@ -71,12 +66,8 @@ export function getUserByIdEvent(id) {
             'Content-Type': 'application/json',
       }
     }).then(response => {
-      console.log("THEN")
-      console.log(response)
       resolve(response)
     }).catch(error => {
-      console.log("CATCH")
-      console.log(error)
       reject(error)
     })
   })
