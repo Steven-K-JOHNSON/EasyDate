@@ -25,7 +25,11 @@ class HomePage extends React.Component {
           return {
               headerRight: <TouchableOpacity
                               style={styles.add_touchable_headerrightbutton}
-                              onPress={() => navigation.navigate('NewEvent')}>
+                              onPress={() =>
+                                {
+                                  const eventNavigation = navigation.getParam('eventNavigation')
+                                  navigation.navigate('NewEvent', {eventNavigation: eventNavigation})
+                                }}>
                               <Image
                                 style={styles.add_event}
                                 source={require('../Images/add_button.png')} />
@@ -78,6 +82,7 @@ class HomePage extends React.Component {
           isLoading: false,
           refreshing: false
         }, () => {
+          this.props.navigation.setParams({ eventNavigation: this.state.events })
           this.setState({
             eventsCalendar: displayAllEvent(this.state.events, this.props.typeEvent)
           })

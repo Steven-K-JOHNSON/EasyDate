@@ -34,11 +34,9 @@ class NewEvent extends React.Component {
     super(props)
     this.inputInvitedPeople = ""
     this.state = {
-      invitedPeople: [
-        this.props.user
-      ],
-      events: [{ participantId: this.props.user.Id, participantEvent: this.props.navigation.state.params }],
-      eventsCalendar: undefined,
+      invitedPeople: [],
+      events: [],
+      eventsCalendar: {},
       dialogVisible: false,
       newEvent: { TypeId: this.props.typeEvent[0].Id },
       isLoading: true,
@@ -93,6 +91,28 @@ class NewEvent extends React.Component {
     this.props.navigation.setParams({ createNewEvent: this._createNewEvent })
   }
 
+  componentWillMount() {
+    var user = {...this.props.user, specificColor: 0}
+    this.setState({
+      invitedPeople: [
+        user
+      ],
+      events: [{ participantId: this.props.user.Id, participantEvent: this.props.navigation.getParam('eventNavigation') }],
+    }, () => {
+      var allEvent = []
+      this.state.events.map((events, index) => {
+        events.participantEvent.map(event => {
+          event = {...event, specificColor: index}
+          allEvent = [...allEvent, event]
+        })
+      })
+
+      this.setState({
+        eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
+      })
+    })
+  }
+
   _addParticipant() {
     getUsersWithPaging()
       .then(data => {
@@ -127,12 +147,23 @@ class NewEvent extends React.Component {
 
         getEventByIdUser(participant.Id)
           .then(data => {
-            console.log(data)
+            data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
+            data.data.map(event => {
+              event.Start = moment(new Date(event.Start)).subtract(2, 'h')
+              event.End = moment(new Date(event.End)).subtract(2, 'h')
+            })
             this.setState({
               events: [...this.state.events, { participantId: participant.Id, participantEvent: data.data }]
             }, () => {
-              this.state.events.map(event => {
-                console.log(event)
+              var allEvent = []
+              this.state.events.map((events, index) => {
+                events.participantEvent.map(event => {
+                  event = {...event, specificColor: index}
+                  allEvent = [...allEvent, event]
+                })
+              })
+              this.setState({
+                eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
               })
             })
           })
@@ -140,10 +171,20 @@ class NewEvent extends React.Component {
             console.log(error)
           })
 
+        // var allInvitedPeople = []
+        // this.state.invitedPeople.map((invitedPeople, index) => {
+        //   invitedPeople = {...invitedPeople, specificColor: index}
+        //   allInvitedPeople = {...allInvitedPeople, invitedPeople}
+        // })
+
+        console.log(this.state.invitedPeople)
+
         this.setState({
-          invitedPeople: [...this.state.invitedPeople, participant],
+          invitedPeople: [...this.state.invitedPeople, {...participant, specificColor: this.state.invitedPeople.length}],
           dialogVisible: false
-        })
+        }, () => console.log(this.state.invitedPeople))
+
+
       })
       .catch(error => {
       console.log(error)
@@ -221,6 +262,26 @@ class NewEvent extends React.Component {
         events: this.state.events.filter((item, index) => index !== eventIndex)
       })
     }
+
+    var allEvent = []
+    this.state.events.map((events, index) => {
+      events.participantEvent.map(event => {
+        event = {...event, specificColor: index}
+        allEvent = [...allEvent, event]
+      })
+    })
+    this.setState({
+      eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
+    })
+
+    var allParticipant = []
+    this.state.invitedPeople.map((invitedPeople, index) => {
+      invitedPeople = {...invitedPeople, specificColor: index}
+      allParticipant = [...allParticipant, invitedPeople]
+    })
+    this.setState({
+      invitedPeople: allParticipant
+    })
 
   }
 
@@ -330,7 +391,7 @@ class NewEvent extends React.Component {
             <Button
               onPress={() => { this._showDialog() }}
               title="Ajouter un participant"
-              color="#27ae60"
+              color='#07975A'
               accessibilityLabel="Learn more about this purple button"
             />
             <InvitedPeopleList

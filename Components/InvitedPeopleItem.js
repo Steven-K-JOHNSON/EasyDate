@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native'
+import { getColor } from '../Tools/ColorTools'
 
 class InvitedPeopleItem extends React.Component {
 
@@ -15,7 +16,7 @@ class InvitedPeopleItem extends React.Component {
         />
         <View style={styles.content_container}>
           <View style={styles.header_container}>
-            <Text style={styles.title_text}>{invitedPeople.Name} {invitedPeople.LastName}</Text>
+            <Text style={[styles.title_text, {color: getColor(invitedPeople.specificColor)}]}>{invitedPeople.Name} {invitedPeople.LastName}</Text>
             <Text style={styles.date}>{invitedPeople.Role}</Text>
           </View>
         </View>

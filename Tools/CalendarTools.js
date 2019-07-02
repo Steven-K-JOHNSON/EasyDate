@@ -1,9 +1,9 @@
 import moment from 'moment'
+import { getColor } from './ColorTools'
 
 export function displayAllEvent(allEvent, typeEvent) {
   eventDisplay = {}
   allEvent.map((event) => {
-
     var currentDayOfEvent = moment(new Date(event.Start))
     var eventLineHeight = 0
     var allDateOfEvent = [
@@ -46,13 +46,13 @@ export function displayAllEvent(allEvent, typeEvent) {
 
     for (var i = 0; i < allDateOfEvent.length; i++) {
       if (event.Start.isSame(event.End, 'day')) {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: typeEvent.find((item) => item.Id === event.TypeId).Color }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
       } else if (moment(allDateOfEvent[i]).isSame(event.Start, 'day')) {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: typeEvent.find((item) => item.Id === event.TypeId).Color }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
       } else if (moment(allDateOfEvent[i]).isSame(event.End, 'day')) {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: typeEvent.find((item) => item.Id === event.TypeId).Color }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
       } else {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: typeEvent.find((item) => item.Id === event.TypeId).Color }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
       }
     }
 
@@ -66,8 +66,4 @@ export function displayAllEvent(allEvent, typeEvent) {
   })
 
   return eventDisplay
-
-  this.setState({
-    eventsCalendar: eventDisplay
-  })
 }
