@@ -5,12 +5,13 @@ class PeopleItem extends React.Component {
 
   render() {
     const { people } = this.props
+    console.log(people)
     return (
       <TouchableOpacity
         style={styles.main_container}>
         <Image
             style={styles.image}
-            source={people.avatar === undefined ? require('../Images/default_people.png') : people.avatar}
+            source={people.avatar === undefined ? require('../Images/default_people.png') : {uri: people.Avatar}}
         />
         <Text style={styles.name}>{people.Name}</Text>
         <Text style={styles.name}>{people.LastName}</Text>

@@ -15,6 +15,9 @@ import { Provider } from 'react-redux'
 import Store from './Store/configureStore'
 import CacheStore from 'react-native-cache-store'
 
+import moment from 'moment'
+import 'moment/locale/fr'
+moment.locale('fr')
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',

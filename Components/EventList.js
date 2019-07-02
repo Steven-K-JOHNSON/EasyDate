@@ -24,7 +24,7 @@ class EventList extends React.Component {
           <Button
             onPress={this.props.loadAllEvent}
             title="Press Me to Refresh"
-            color="#841584"
+            color="#3498db"
           />
         </View>
       )

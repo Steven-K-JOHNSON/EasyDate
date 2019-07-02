@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TextInput, Button, Text, FlatList, ActivityIndicator, Platform, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, TextInput, Button, Text, FlatList, AsyncStorage, ActivityIndicator, Platform, Image, TouchableOpacity, Alert } from 'react-native'
 import EventItem from './EventItem'
 import EventList from './EventList'
 import LinearGradient from 'react-native-linear-gradient'
@@ -21,7 +21,6 @@ class HomePage extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
         // if (Platform.OS === 'ios') {
-        console.log(this.props)
           return {
               headerRight: <TouchableOpacity
                               style={styles.add_touchable_headerrightbutton}
@@ -29,6 +28,16 @@ class HomePage extends React.Component {
                               <Image
                                 style={styles.add_event}
                                 source={require('../Images/add_button.png')} />
+                            </TouchableOpacity>,
+              headerLeft: <TouchableOpacity
+                              style={styles.add_touchable_headerleftbutton}
+                              onPress={() => {
+                                const logout = navigation.getParam('logout')
+                                logout()
+                              }}>
+                              <Image
+                                style={styles.logout}
+                                source={require('../Images/logout.png')} />
                             </TouchableOpacity>
           }
         // }
@@ -146,6 +155,30 @@ class HomePage extends React.Component {
   componentDidMount() {
     // Appel API pour recevoir tous les events d'un User
     this._loadAllEvent()
+    this.props.navigation.setParams({ logout: this._signOutAsync })
+  }
+
+  _signOutAsync = () => {
+    Alert.alert(
+      'Deconnexion',
+      'Se déconnecter ?',
+      [
+        {
+          text: 'Non',
+          style: 'cancel',
+        },
+        {
+          text: 'Oui',
+          onPress: async () => {
+            await AsyncStorage.clear();
+            this.props.navigation.navigate('Auth');
+          }
+        },
+      ],
+      {
+        cancelable: false
+      },
+    )
   }
 
   render() {
@@ -156,7 +189,6 @@ class HomePage extends React.Component {
         </View>
       )
     } else {
-      console.log(this.props)
       return (
         <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
           <Calendar
@@ -218,15 +250,16 @@ const styles = StyleSheet.create({
   add_touchable_headerrightbutton: {
     marginRight: 8
   },
+  add_touchable_headerleftbutton: {
+    marginLeft: 8
+  },
   add_event: {
     width: 30,
     height: 30
   },
-  calendar: {
-    flex: 2,
-  },
-  list: {
-    flex: 1
+  logout: {
+    width: 30,
+    height: 30
   }
 })
 

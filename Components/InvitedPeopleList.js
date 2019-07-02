@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, FlatList } from 'react-native'
+import { StyleSheet, FlatList, View, Text } from 'react-native'
 import InvitedPeopleItem from './InvitedPeopleItem'
 
 class InvitedPeopleList extends React.Component {
@@ -7,51 +7,39 @@ class InvitedPeopleList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      invitedPeople: this.props.invitedPeople
+      invitedPeople: []
     }
   }
 
-  _deleteInvitedPeopleFromEvent = (idPeople) => {
-    const invitedPeopleIndex = this.state.invitedPeople.findIndex(item => item.id === idPeople)
-      if (invitedPeopleIndex !== -1) {
-        console.log("IF")
-        console.log(invitedPeopleIndex)
-        this.state.invitedPeople.splice(invitedPeopleIndex, 1)
-        console.log(this.state.invitedPeople)
-
-        this.setState({
-          invitedPeople: this.state.invitedPeople.length === 0 ? [] : this.state.invitedPeople
-        })
-      }
-  }
-
-  _test = () => {
-    var id = this.state.invitedPeople[this.state.invitedPeople.length - 1].id + 1
-    console.log(id)
+  componentWillMount() {
     this.setState({
-      invitedPeople: [
-        ... this.state.invitedPeople, { id: id, avatar: require('../Images/default_people.png'), firstname: 'Louis', lastname: 'Mantopoulos', role: 'Chef yep'}
-      ]
+      invitedPeople: this.props.invitedPeople
     })
   }
 
   render() {
-    return (
-      <FlatList
-        style={styles.list}
-        data={this.state.invitedPeople}
-        extraData={this.state.invitedPeople}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({item}) => (
-          <InvitedPeopleItem
-            invitedPeople={item}
-            deleteInvitedPeopleFromEvent={this._deleteInvitedPeopleFromEvent}
-            test={this._test}
-            navigation={this.props.navigation}
-          />
-        )}
-      />
-    )
+    if (this.props.invitedPeople.length === 0) {
+      return (
+        <View style={styles.list_empty}>
+          <Text>Personne n'est invité à votre évènement</Text>
+        </View>
+      )
+    } else {
+      return (
+        <FlatList
+          style={styles.list}
+          data={this.props.invitedPeople}
+          keyExtractor={(item) => item.Id.toString()}
+          renderItem={({item}) => (
+            <InvitedPeopleItem
+              invitedPeople={item}
+              deleteInvitedPeopleFromEvent={this.props.deleteInvitedPeopleFromEvent}
+              navigation={this.props.navigation}
+            />
+          )}
+        />
+      )
+    }
   }
 }
 
@@ -59,6 +47,11 @@ const styles = StyleSheet.create({
   list: {
     flex: 1
   },
+  list_empty: {
+    flex: 1,
+    alignSelf: 'center',
+    marginTop: 30
+  }
 })
 
 export default InvitedPeopleList

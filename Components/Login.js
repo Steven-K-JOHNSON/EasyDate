@@ -36,21 +36,30 @@ class Login extends React.Component {
     })
     getUserByEAndP(this.login, this.password).then(data => {
       console.log(data)
-      if (data.data[0].Id !== undefined) {
+      if (data.data.length !== 0) {
         const action = { type: "LOGIN_USER", value: data.data[0] }
         this.props.dispatch(action)
         this.props.navigation.navigate('HomePage')
         AsyncStorage.setItem('userToken', JSON.stringify(data.data[0]))
         const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
         AsyncStorage.setItem('dateToken', dateToken)
-        this.setState({
-          isLoading: false
-        })
       } else {
         console.log('NOT GOOD')
+        Alert.alert(
+         'Identifiants incorrects',
+         'Veuillez réessayer.',
+         [
+           {text: 'OK'},
+         ],
+         {cancelable: false},
+         )
       }
     }).catch(error => {
       console.log(error)
+    })
+
+    this.setState({
+      isLoading: false
     })
   }
 
@@ -61,9 +70,6 @@ class Login extends React.Component {
   _passwordTextInputChange(text) {
     this.password = text
   }
-
-
-
 
   componentWillMount() {
   }

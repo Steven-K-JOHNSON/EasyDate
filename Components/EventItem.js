@@ -49,6 +49,7 @@ class EventItem extends React.Component {
           <Image
               style={styles.image}
               source={icon}
+              // source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/hoangloi/128.jpg' }}
           />
           <View style={styles.content_container}>
             <View style={styles.header_container}>
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   },
   title_text: {
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 16,
     flex: 1,
     flexWrap: 'wrap',
     paddingRight: 5,

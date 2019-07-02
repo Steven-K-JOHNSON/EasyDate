@@ -8,16 +8,15 @@ class InvitedPeopleItem extends React.Component {
     return (
       <TouchableOpacity
         style={styles.main_container}
-        onPress={() => test()}
-        onLongPress={() => deleteInvitedPeopleFromEvent(invitedPeople.id)}>
+        onLongPress={() => deleteInvitedPeopleFromEvent(invitedPeople.Id)}>
         <Image
             style={styles.image}
-            source={invitedPeople.avatar}
+            source={require('../Images/default_people.png')}
         />
         <View style={styles.content_container}>
           <View style={styles.header_container}>
-            <Text style={styles.title_text}>{invitedPeople.firstname} {invitedPeople.lastname}</Text>
-            <Text style={styles.date}>{invitedPeople.role}</Text>
+            <Text style={styles.title_text}>{invitedPeople.Name} {invitedPeople.LastName}</Text>
+            <Text style={styles.date}>{invitedPeople.Role}</Text>
           </View>
         </View>
         <Image
@@ -31,7 +30,7 @@ class InvitedPeopleItem extends React.Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    height: 60,
+    height: 50,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -39,9 +38,9 @@ const styles = StyleSheet.create({
     marginBottom: 2
   },
   image: {
-    width: 55,
-    height: 55,
-    borderRadius: 55/2,
+    width: 40,
+    height: 40,
+    borderRadius: 40/2,
     borderColor: '#000000',
     borderWidth: 1,
     margin: 10,
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
   },
   title_text: {
     fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 15,
     flex: 1,
     flexWrap: 'wrap',
     paddingRight: 5,
