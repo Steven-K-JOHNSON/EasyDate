@@ -9,6 +9,6 @@ export function getImage(photoName) {
     case 'Medical':
       return require('../Images/TypeEvent/Medical.png')
     default:
-
+      return require('../Images/TypeEvent/Formation.png')
   }
 }
