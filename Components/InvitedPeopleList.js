@@ -34,6 +34,7 @@ class InvitedPeopleList extends React.Component {
             <InvitedPeopleItem
               invitedPeople={item}
               deleteInvitedPeopleFromEvent={this.props.deleteInvitedPeopleFromEvent}
+              displayInvitedPeopleDetail={this.props.displayInvitedPeopleDetail}
               navigation={this.props.navigation}
             />
           )}

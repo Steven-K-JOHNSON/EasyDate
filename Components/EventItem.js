@@ -26,7 +26,14 @@ class EventItem extends React.Component {
         isLoading: false
       })
     }).catch(error => {
-      console.log(error)
+      Alert.alert(
+       'Problème',
+       "Un problème est survenu lors de la récupération des participants à l'évènement.",
+       [
+         {text: 'OK'},
+       ],
+         {cancelable: false},
+       )
     })
   }
 

@@ -18,35 +18,7 @@ LocaleConfig.locales['fr'] = {
 };
 LocaleConfig.defaultLocale = 'fr';
 
-class HomePage extends React.Component {
-
-  static navigationOptions = ({ navigation }) => {
-        // if (Platform.OS === 'ios') {
-          return {
-              headerRight: <TouchableOpacity
-                              style={styles.add_touchable_headerrightbutton}
-                              onPress={() =>
-                                {
-                                  const eventNavigation = navigation.getParam('eventNavigation')
-                                  navigation.navigate('NewEvent', {eventNavigation: eventNavigation})
-                                }}>
-                              <Image
-                                style={styles.add_event}
-                                source={require('../Images/add_button.png')} />
-                            </TouchableOpacity>,
-              headerLeft: <TouchableOpacity
-                              style={styles.add_touchable_headerleftbutton}
-                              onPress={() => {
-                                const logout = navigation.getParam('logout')
-                                logout()
-                              }}>
-                              <Image
-                                style={styles.logout}
-                                source={require('../Images/logout.png')} />
-                            </TouchableOpacity>
-          }
-        // }
-    }
+class InvitedPeopleDetail extends React.Component {
 
   constructor(props) {
     super(props)
@@ -56,9 +28,11 @@ class HomePage extends React.Component {
       isLoading: true,
       refreshing: false
     }
-    
+
     this._loadAllEvent = this._loadAllEvent.bind(this);
   }
+
+
 
   _loadAllEvent() {
     this.setState({
@@ -86,31 +60,17 @@ class HomePage extends React.Component {
 
   componentDidMount() {
     // Appel API pour recevoir tous les events d'un User
-    this._loadAllEvent()
-    this.props.navigation.setParams({ logout: this._signOutAsync })
-  }
+    // this._loadAllEvent()
 
-  _signOutAsync = () => {
-    Alert.alert(
-      'Deconnexion',
-      'Se déconnecter ?',
-      [
-        {
-          text: 'Non',
-          style: 'cancel',
-        },
-        {
-          text: 'Oui',
-          onPress: async () => {
-            await AsyncStorage.clear();
-            this.props.navigation.navigate('Auth');
-          }
-        },
-      ],
-      {
-        cancelable: false
-      },
-    )
+    var events = this.props.navigation.getParam('eventsDetail')
+
+    this.setState({
+      eventsCalendar: displayAllEvent(events.participantEvent, this.props.typeEvent)
+    }, () => this.setState({
+      isLoading: false
+    }))
+
+
   }
 
   render() {
@@ -151,7 +111,7 @@ class HomePage extends React.Component {
             }}
           />
           <EventList
-            events={this.state.events}
+            events={this.props.navigation.getParam('eventsDetail').participantEvent}
             loadAllEvent={this._loadAllEvent}
             refreshing={this.state.refreshing}
             navigation={this.props.navigation}
@@ -198,4 +158,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(HomePage)
+export default connect(mapStateToProps)(InvitedPeopleDetail)

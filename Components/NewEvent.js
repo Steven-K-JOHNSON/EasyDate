@@ -53,6 +53,7 @@ class NewEvent extends React.Component {
     }
 
     this._deleteInvitedPeopleFromEvent = this._deleteInvitedPeopleFromEvent.bind(this)
+    this._displayInvitedPeopleDetail = this._displayInvitedPeopleDetail.bind(this)
     this._addTitleDescription = this._addTitleDescription.bind(this);
   }
 
@@ -172,7 +173,14 @@ class NewEvent extends React.Component {
             })
           })
           .catch(error => {
-            console.log(error)
+            Alert.alert(
+             'Problème',
+             "Un problème est survenu lors de la récupération des évènements.",
+             [
+               {text: 'OK'},
+             ],
+               {cancelable: false},
+             )
           })
 
         this.setState({
@@ -181,7 +189,14 @@ class NewEvent extends React.Component {
         })
       })
       .catch(error => {
-      console.log(error)
+        Alert.alert(
+         'Problème',
+         "Un problème est survenu lors de la récupération des utilisateurs.",
+         [
+           {text: 'OK'},
+         ],
+           {cancelable: false},
+         )
     })
   }
 
@@ -215,6 +230,18 @@ class NewEvent extends React.Component {
   }
 
   _createNewEvent() {
+    if (this.inputTitle === "" || this.inputDescription === "") {
+      Alert.alert(
+       'Attention',
+       'Le titre et la description doivent être renseignés.',
+       [
+         {text: 'OK'},
+       ],
+         {cancelable: false},
+       )
+     return
+    }
+
     insertDate(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))
     .then(data => {
 
@@ -231,7 +258,6 @@ class NewEvent extends React.Component {
 
           })
           .catch(error => {
-            console.log(error)
             Alert.alert(
              'Réseau',
              'Problème de réseau',
@@ -250,12 +276,24 @@ class NewEvent extends React.Component {
       this.props.navigation.navigate('HomePage')
     })
     .catch(error => {
-      console.log(error)
+      Alert.alert(
+       'Problème',
+       "Un problème est survenu lors de la création de l'évènement.",
+       [
+         {text: 'OK'},
+       ],
+         {cancelable: false},
+       )
     })
   }
 
+  _displayInvitedPeopleDetail = (idPeople) => {
+    const eventIndex = this.state.events.findIndex(item => item.participantId === idPeople)
+
+    this.props.navigation.navigate('InvitedPeopleDetail', {eventsDetail: this.state.events[eventIndex]})
+  }
+
   _deleteInvitedPeopleFromEvent = (idPeople) => {
-    console.log(idPeople)
     const invitedPeopleIndex = this.state.invitedPeople.findIndex(item => item.Id === idPeople)
     const eventIndex = this.state.events.findIndex(item => item.participantId === idPeople)
 
@@ -381,6 +419,8 @@ class NewEvent extends React.Component {
                 isVisible={this.state.startDateTimePickerVisible}
                 onConfirm={this._handleStartDatePicked}
                 onCancel={this._hideStartDateTimePicker}
+                cancelTextIOS="Retour"
+                confirmTextIOS="Confirmer"
                 mode={'datetime'}
                 date={new Date(moment(new Date()).add(1, 'h'))}
                 is24Hour={true}
@@ -395,6 +435,8 @@ class NewEvent extends React.Component {
                 isVisible={this.state.endDateTimePickerVisible}
                 onConfirm={this._handleEndDatePicked}
                 onCancel={this._hideEndDateTimePicker}
+                cancelTextIOS="Retour"
+                confirmTextIOS="Confirmer"
                 mode={'datetime'}
                 date={new Date(moment(new Date()).add(2, 'h'))}
                 is24Hour={true}
@@ -412,6 +454,7 @@ class NewEvent extends React.Component {
             <InvitedPeopleList
               invitedPeople={this.state.invitedPeople}
               deleteInvitedPeopleFromEvent={this._deleteInvitedPeopleFromEvent}
+              displayInvitedPeopleDetail={this._displayInvitedPeopleDetail}
               navigation={this.props.navigation}
             />
           </View>

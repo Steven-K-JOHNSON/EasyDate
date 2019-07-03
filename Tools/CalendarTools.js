@@ -43,13 +43,13 @@ export function displayAllEvent(allEvent, typeEvent) {
 
     for (var i = 0; i < allDateOfEvent.length; i++) {
       if (event.Start.isSame(event.End, 'day')) {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: true, color: event.IsPublic ? event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) : 'black' }
       } else if (moment(allDateOfEvent[i]).isSame(event.Start, 'day')) {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: true, endingDay: false, color: event.IsPublic ? event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) : 'black' }
       } else if (moment(allDateOfEvent[i]).isSame(event.End, 'day')) {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: true, color: event.IsPublic ? event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) : 'black' }
       } else {
-        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) }
+        eventDisplay[allDateOfEvent[i]].periods[eventLineHeight] = { startingDay: false, endingDay: false, color: event.IsPublic ? event.specificColor === undefined ? typeEvent.find((item) => item.Id === event.TypeId).Color : getColor(event.specificColor) : 'black' }
       }
     }
 

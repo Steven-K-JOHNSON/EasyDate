@@ -9,6 +9,7 @@ import HomePage from '../Components/HomePage'
 import EventDetail from '../Components/EventDetail'
 import NewEvent from '../Components/NewEvent'
 import AuthLoadingScreen from '../Components/AuthLoadingScreen'
+import InvitedPeopleDetail from '../Components/InvitedPeopleDetail'
 
 const LoginStackNavigator = createStackNavigator({
   Login: {
@@ -42,6 +43,12 @@ const AppStackNavigator = createStackNavigator({
     screen: NewEvent,
     navigationOptions: {
       title: 'Ajout évènement'
+    }
+  },
+  InvitedPeopleDetail: {
+    screen: InvitedPeopleDetail,
+    navigationOptions: {
+      title: 'Détail évènement'
     }
   }
 })

@@ -35,7 +35,6 @@ class Login extends React.Component {
       isLoading: true
     })
     getUserByEAndP(this.login, this.password).then(data => {
-      console.log(data)
       if (data.data.length !== 0) {
         const action = { type: "LOGIN_USER", value: data.data[0] }
         this.props.dispatch(action)
@@ -44,7 +43,6 @@ class Login extends React.Component {
         const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
         AsyncStorage.setItem('dateToken', dateToken)
       } else {
-        console.log('NOT GOOD')
         Alert.alert(
          'Identifiants incorrects',
          'Veuillez réessayer.',
@@ -58,7 +56,14 @@ class Login extends React.Component {
         isLoading: false
       })
     }).catch(error => {
-      console.log(error)
+      Alert.alert(
+       'Problème',
+       "Un problème est survenu lors de la connexion à l'application.",
+       [
+         {text: 'OK'},
+       ],
+         {cancelable: false},
+       )
       this.setState({
         isLoading: false
       })

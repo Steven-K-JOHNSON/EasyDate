@@ -137,7 +137,6 @@ export function insertEventWithParticipant(newEvent) {
 }
 
 export function insertUserWithSelfGroup(newUser) {
-  console.log(newUser)
   return new Promise((resolve, reject) => {
     axios.post(urlWrite + '/API/WEB/SET/user/insertUserWithSelfGroup', {
       AuthAPI: AUTH_API,

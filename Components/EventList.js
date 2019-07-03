@@ -12,10 +12,9 @@ class EventList extends React.Component {
   }
 
   _displayDetailForEvent = (eventDisplay) => {
-    // On a récupéré les informations de la navigation, on peut afficher le détail du film
     this.props.navigation.navigate('EventDetail', {event: eventDisplay})
   }
-
+  
   render() {
     if (this.props.events.length === 0) {
       return (

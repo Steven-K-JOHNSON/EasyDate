@@ -58,11 +58,8 @@ class SignUp extends React.Component {
       Password: this.password,
     }
 
-    console.log(newUser)
-
     insertUserWithSelfGroup(newUser).then(data => {
       getUserByEAndP(this.email, this.password).then(data => {
-        console.log(data)
         if (data.data.length !== 0) {
           const action = { type: "LOGIN_USER", value: data.data[0] }
           this.props.dispatch(action)

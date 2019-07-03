@@ -5,10 +5,11 @@ import { getColor } from '../Tools/ColorTools'
 class InvitedPeopleItem extends React.Component {
 
   render() {
-    const { invitedPeople, deleteInvitedPeopleFromEvent, test } = this.props
+    const { invitedPeople, deleteInvitedPeopleFromEvent, displayInvitedPeopleDetail } = this.props
     return (
       <TouchableOpacity
         style={styles.main_container}
+        onPress={() => displayInvitedPeopleDetail(invitedPeople.Id)}
         onLongPress={() => deleteInvitedPeopleFromEvent(invitedPeople.Id)}>
         <Image
             style={styles.image}
