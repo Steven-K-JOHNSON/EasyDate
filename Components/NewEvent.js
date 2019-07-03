@@ -6,7 +6,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import InvitedPeopleList from './InvitedPeopleList'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { insertDate, insertEventWithParticipant, getUsersWithPaging, getEventByIdUser } from '../API/EasyDateAPI'
+import { insertDate, insertEventWithParticipant, getUsersWithPaging, getEventByIdUser, insertAgenda, getSelfGroupByIdUser } from '../API/EasyDateAPI'
 import Dialog from "react-native-dialog"
 import { displayAllEvent } from '../Tools/CalendarTools'
 
@@ -243,48 +243,73 @@ class NewEvent extends React.Component {
     }
 
     insertDate(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))
-    .then(data => {
+      .then(data => {
+        getSelfGroupByIdUser(this.props.user.Id)
+          .then(selfGroup => {
+            insertAgenda(selfGroup.data[0].Id)
+            // insertAgenda('6a56c73b-e3ed-48ef-99f6-b2d53b9fdafd')
+              .then(agenda => {
 
-      var idUsers = []
-      this.state.invitedPeople.map(people => {
-        idUsers = [...idUsers, people.Id]
-      })
+                var idUsers = []
+                this.state.invitedPeople.map(people => {
+                  idUsers = [...idUsers, people.Id]
+                })
 
-      this.setState({
-        newEvent: {...this.state.newEvent, CreatedId: data.data[0].Id, IdUsers: idUsers, Title: this.inputTitle, Description: this.inputDescription}
-      }, () => {
-        insertEventWithParticipant(this.state.newEvent)
-          .then(data => {
+                this.setState({
+                  newEvent: {...this.state.newEvent, CreatedId: data.data[0].Id, IdUsers: idUsers, Title: this.inputTitle, Description: this.inputDescription, AgendaId: agenda.data[0].Id, Owner: this.props.user.Id}
+                }, () => {
+                  insertEventWithParticipant(this.state.newEvent)
+                    .then(data => {
+                      this.props.navigation.navigate('HomePage')
+                    })
+                    .catch(error => {
+                      Alert.alert(
+                       'Réseau',
+                       'Problème de réseau',
+                       [
+                         {text: 'OK'},
+                       ],
+                       {cancelable: false},
+                     )
+                    })
+                  })
 
+                  this.setState({
+                    dialogTitleDescVisible: false
+                  })
+                })
+              })
+              .catch(error => {
+                Alert.alert(
+                 'Problème',
+                 "Un problème est survenu lors de la création de l'agenda.",
+                 [
+                   {text: 'OK'},
+                 ],
+                   {cancelable: false},
+                 )
+              })
           })
           .catch(error => {
             Alert.alert(
-             'Réseau',
-             'Problème de réseau',
+             'Problème',
+             "Un problème est survenu lors de la récupération de votre groupe.",
              [
                {text: 'OK'},
              ],
-             {cancelable: false},
-           )
+               {cancelable: false},
+             )
           })
+      .catch(error => {
+        Alert.alert(
+         'Problème',
+         "Un problème est survenu lors de la création de l'évènement.",
+         [
+           {text: 'OK'},
+         ],
+           {cancelable: false},
+         )
       })
-
-      this.setState({
-        dialogTitleDescVisible: false
-      })
-
-      this.props.navigation.navigate('HomePage')
-    })
-    .catch(error => {
-      Alert.alert(
-       'Problème',
-       "Un problème est survenu lors de la création de l'évènement.",
-       [
-         {text: 'OK'},
-       ],
-         {cancelable: false},
-       )
-    })
   }
 
   _displayInvitedPeopleDetail = (invitedPeople) => {

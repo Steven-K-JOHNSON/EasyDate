@@ -115,7 +115,7 @@ export function insertEventWithParticipant(newEvent) {
     axios.post(urlWrite + '/API/MOBILE/SET/other/insertEventWithParticipant', {
       AuthAPI: AUTH_API,
 
-      AgendaId: "f7249dad-6aa0-4b2f-bef9-b624e5d34dd1",
+      AgendaId: newEvent.AgendaId,
     	TypeId: newEvent.TypeId,
     	Start: moment(newEvent.Start).format('YYYY-MM-DD HH:mm'),
     	End: moment(newEvent.End).format('YYYY-MM-DD HH:mm'),
@@ -123,6 +123,7 @@ export function insertEventWithParticipant(newEvent) {
     	Title: newEvent.Title,
     	Description: newEvent.Description,
     	IsPublic: 1,
+      Owner: newEvent.Owner,
     	IdUsers: newEvent.IdUsers
     }, {
       headers: {
@@ -149,6 +150,45 @@ export function insertUserWithSelfGroup(newUser) {
     	Role: 2,
     	GroupName: newUser.Name + ' ' + newUser.LastName + ' Group',
     	GroupDescription: newUser.Name + ' ' + newUser.LastName + ' Group description',
+    }, {
+      headers: {
+            'Content-Type': 'application/json',
+      }
+    }).then(response => {
+      resolve(response)
+    }).catch(error => {
+      reject(error)
+    })
+  })
+}
+
+export function insertAgenda(groupId) {
+  return new Promise((resolve, reject) => {
+    axios.post(urlWrite + '/API/WEB/SET/Agenda/insertAgenda', {
+      AuthAPI: AUTH_API,
+
+      GroupId: groupId,
+    	DayEnd: "2020-12-12 23:59:59",
+    	DayStart: "2019-01-01 00:00:01",
+    	DefaultDuration: "10"
+    }, {
+      headers: {
+            'Content-Type': 'application/json',
+      }
+    }).then(response => {
+      resolve(response)
+    }).catch(error => {
+      reject(error)
+    })
+  })
+}
+
+export function getSelfGroupByIdUser(id) {)
+  return new Promise((resolve, reject) => {
+    axios.post(urlRead + '/API/WEB/GET/group/getSelfGroupByIdUser', {
+      AuthAPI: AUTH_API,
+
+      Id: id
     }, {
       headers: {
             'Content-Type': 'application/json',
