@@ -54,12 +54,14 @@ class Login extends React.Component {
          {cancelable: false},
          )
       }
+      this.setState({
+        isLoading: false
+      })
     }).catch(error => {
       console.log(error)
-    })
-
-    this.setState({
-      isLoading: false
+      this.setState({
+        isLoading: false
+      })
     })
   }
 
@@ -71,7 +73,8 @@ class Login extends React.Component {
     this.password = text
   }
 
-  componentWillMount() {
+  _signUp() {
+    this.props.navigation.navigate('SignUp')
   }
 
   render() {
@@ -88,7 +91,7 @@ class Login extends React.Component {
                 style={styles.text_login}
                 placeholder='Login'
                 placeholderTextColor='#767676'
-                onSubmitEditing={() => { this.secondTextInput.focus() }}
+                onSubmitEditing={() => { this.passwordTextInput.focus() }}
                 onChangeText = {(text) => this._loginTextInputChange(text)}
                 returnKeyType='next'/>
               <TextInput
@@ -98,10 +101,15 @@ class Login extends React.Component {
                 secureTextEntry={true}
                 onSubmitEditing={() => this._tryToLogin()}
                 onChangeText = {(text) => this._passwordTextInputChange(text)}
-                ref={(input) => { this.secondTextInput = input; }}/>
+                ref={(input) => { this.passwordTextInput = input; }}/>
             </View>
+            <Button
+              onPress={() => { this._signUp() }}
+              title="Vous inscrire ?"
+              color='#3c40c6'
+            />
             <View style={styles.little_text}>
-              <Text style={styles.default}>L’organisation facilitée de votre agenda personnel et professionnel</Text>
+              <Text style={styles.default}>L’organisation facilitée de votre agenda professionnel</Text>
             </View>
         </KeyboardAvoidingView>
         {this._displayLoading()}
@@ -127,7 +135,8 @@ const styles = StyleSheet.create({
   login_container: {
     flexGrow: 1,
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginBottom: 20
   },
   little_text: {
     flexGrow: 1,

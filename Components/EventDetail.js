@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     margin: 15,
     textAlign: 'center',
     lineHeight: 20,
-    fontSize: 13
+    fontSize: 14
   },
   list: {
     flex: 1,

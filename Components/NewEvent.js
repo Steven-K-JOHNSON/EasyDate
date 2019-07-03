@@ -175,20 +175,10 @@ class NewEvent extends React.Component {
             console.log(error)
           })
 
-        // var allInvitedPeople = []
-        // this.state.invitedPeople.map((invitedPeople, index) => {
-        //   invitedPeople = {...invitedPeople, specificColor: index}
-        //   allInvitedPeople = {...allInvitedPeople, invitedPeople}
-        // })
-
-        console.log(this.state.invitedPeople)
-
         this.setState({
           invitedPeople: [...this.state.invitedPeople, {...participant, specificColor: this.state.invitedPeople.length}],
           dialogVisible: false
-        }, () => console.log(this.state.invitedPeople))
-
-
+        })
       })
       .catch(error => {
       console.log(error)
@@ -227,11 +217,9 @@ class NewEvent extends React.Component {
   _createNewEvent() {
     insertDate(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))
     .then(data => {
-      console.log(data)
 
       var idUsers = []
       this.state.invitedPeople.map(people => {
-        console.log(people)
         idUsers = [...idUsers, people.Id]
       })
 
@@ -315,7 +303,7 @@ class NewEvent extends React.Component {
   render() {
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
-        <Dialog.Container visible={ this.state.dialogTitleDescVisible }>
+        <Dialog.Container visible={ this.state.dialogTitleDescVisible } contentStyle={ styles.dialog_container }>
           <Dialog.Description>
             Remplissez le titre et la description de l'évènement.
           </Dialog.Description>
@@ -420,7 +408,6 @@ class NewEvent extends React.Component {
               onPress={() => { this._showDialog() }}
               title="Ajouter un participant"
               color='#07975A'
-              accessibilityLabel="Learn more about this purple button"
             />
             <InvitedPeopleList
               invitedPeople={this.state.invitedPeople}
@@ -441,6 +428,9 @@ const styles = StyleSheet.create({
   params_container: {
     flexGrow: 1,
     flexDirection: 'column',
+  },
+  dialog_container: {
+    marginBottom: Platform.OS === 'android' ? 50 : 100
   },
   event_date_container: {
     flex: 1,

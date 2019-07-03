@@ -17,10 +17,8 @@ export function getUserByEAndP(mail, password) {
             'Content-Type': 'application/json',
       }
     }).then(response => {
-      console.log("response : " + response.status)
       resolve(response)
     }).catch(error => {
-      console.log(error)
       reject(error);
     })
   });
@@ -113,7 +111,6 @@ export function insertDate(date) {
 }
 
 export function insertEventWithParticipant(newEvent) {
-  console.log(newEvent)
   return new Promise((resolve, reject) => {
     axios.post(urlWrite + '/API/MOBILE/SET/other/insertEventWithParticipant', {
       AuthAPI: AUTH_API,
@@ -127,6 +124,32 @@ export function insertEventWithParticipant(newEvent) {
     	Description: newEvent.Description,
     	IsPublic: 1,
     	IdUsers: newEvent.IdUsers
+    }, {
+      headers: {
+            'Content-Type': 'application/json',
+      }
+    }).then(response => {
+      resolve(response)
+    }).catch(error => {
+      reject(error)
+    })
+  })
+}
+
+export function insertUserWithSelfGroup(newUser) {
+  console.log(newUser)
+  return new Promise((resolve, reject) => {
+    axios.post(urlWrite + '/API/WEB/SET/user/insertUserWithSelfGroup', {
+      AuthAPI: AUTH_API,
+
+      PlayerName: newUser.PlayerName,
+    	Name: newUser.Name,
+    	LastName: newUser.LastName,
+    	Email: newUser.Email,
+    	Password: newUser.Password,
+    	Role: 2,
+    	GroupName: newUser.Name + ' ' + newUser.LastName + ' Group',
+    	GroupDescription: newUser.Name + ' ' + newUser.LastName + ' Group description',
     }, {
       headers: {
             'Content-Type': 'application/json',

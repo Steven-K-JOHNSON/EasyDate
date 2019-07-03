@@ -5,7 +5,6 @@ class PeopleItem extends React.Component {
 
   render() {
     const { people } = this.props
-    console.log(people)
     return (
       <TouchableOpacity
         style={styles.main_container}>
