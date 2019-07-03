@@ -154,10 +154,8 @@ export function insertUserWithSelfGroup(newUser) {
             'Content-Type': 'application/json',
       }
     }).then(response => {
-      console.log(response)
       resolve(response)
     }).catch(error => {
-      console.log(error)
       reject(error)
     })
   })

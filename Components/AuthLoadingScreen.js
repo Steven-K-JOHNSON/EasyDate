@@ -36,13 +36,20 @@ class AuthLoadingScreen extends React.Component {
           .then(data => {
             const action = { type: "SET_TYPE_EVENT", value: data.data }
             this.props.dispatch(action)
-            
+
             // This will switch to the App screen or Auth screen and this loading
             // screen will be unmounted and thrown away.
             this.props.navigation.navigate(userToken ? 'App' : 'Auth')
           })
           .catch(error => {
-            console.log(error)
+            Alert.alert(
+             'Problème',
+             "Un problème est survenu lors de la récupération des types d'évènement.",
+             [
+               {text: 'OK'},
+             ],
+               {cancelable: false},
+             )
           })
 
 
