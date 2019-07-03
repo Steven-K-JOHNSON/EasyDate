@@ -39,7 +39,7 @@ class Login extends React.Component {
       if (data.data.length !== 0) {
         const action = { type: "LOGIN_USER", value: data.data[0] }
         this.props.dispatch(action)
-        this.props.navigation.navigate('HomePage')
+        this.props.navigation.navigate('App')
         AsyncStorage.setItem('userToken', JSON.stringify(data.data[0]))
         const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
         AsyncStorage.setItem('dateToken', dateToken)

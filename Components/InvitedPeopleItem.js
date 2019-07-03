@@ -17,13 +17,9 @@ class InvitedPeopleItem extends React.Component {
         <View style={styles.content_container}>
           <View style={styles.header_container}>
             <Text style={[styles.title_text, {color: getColor(invitedPeople.specificColor)}]}>{invitedPeople.Name} {invitedPeople.LastName}</Text>
-            <Text style={styles.date}>{invitedPeople.Role}</Text>
+            <Text style={styles.date}>{invitedPeople.Email}</Text>
           </View>
         </View>
-        <Image
-            style={styles.image_next}
-            source={require('../Images/next.png')}
-        />
       </TouchableOpacity>
     )
   }

@@ -10,7 +10,6 @@ export function displayAllEvent(allEvent, typeEvent) {
       currentDayOfEvent.format('YYYY-MM-DD')
     ]
 
-    console.log("Création du tableau des jours")
     while (!currentDayOfEvent.isSame(event.End, 'day')) {
       currentDayOfEvent.add(1, 'days')
       allDateOfEvent = [
@@ -19,7 +18,6 @@ export function displayAllEvent(allEvent, typeEvent) {
       ]
     }
 
-    console.log("Vérification de la place dans le calendrier")
     var placeInCalendarFounded = false
     while(!placeInCalendarFounded) {
       for (var i = 0; i < allDateOfEvent.length; i++) {
@@ -34,7 +32,6 @@ export function displayAllEvent(allEvent, typeEvent) {
         }
       }
     }
-    console.log("Fin de vérification")
 
     allDateOfEvent.map(date => {
       if (!(date in eventDisplay)) {

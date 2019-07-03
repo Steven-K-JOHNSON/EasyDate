@@ -90,7 +90,7 @@ class HomePage extends React.Component {
       })
     })
   }
-
+  
   componentDidMount() {
     // Appel API pour recevoir tous les events d'un User
     this._loadAllEvent()

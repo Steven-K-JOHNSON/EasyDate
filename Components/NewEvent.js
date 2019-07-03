@@ -18,9 +18,10 @@ class NewEvent extends React.Component {
               headerRight: <TouchableOpacity
                               style={styles.validate_touchable_headerrightbutton}
                               onPress={() => {
-                                const createNewEvent = navigation.getParam('createNewEvent')
-                                createNewEvent()
-
+                                const addTitleDescription = navigation.getParam('addTitleDescription')
+                                if (addTitleDescription !== undefined) {
+                                  addTitleDescription()
+                                }
                               }}>
                               <Image
                                 style={styles.validate_event}
@@ -33,11 +34,14 @@ class NewEvent extends React.Component {
   constructor(props) {
     super(props)
     this.inputInvitedPeople = ""
+    this.inputDescription = ""
+    this.inputTitle = ""
     this.state = {
       invitedPeople: [],
       events: [],
       eventsCalendar: {},
       dialogVisible: false,
+      dialogTitleDescVisible: false,
       newEvent: { TypeId: this.props.typeEvent[0].Id },
       isLoading: true,
       startDateTimePickerVisible: false,
@@ -49,7 +53,7 @@ class NewEvent extends React.Component {
     }
 
     this._deleteInvitedPeopleFromEvent = this._deleteInvitedPeopleFromEvent.bind(this)
-    this._createNewEvent = this._createNewEvent.bind(this);
+    this._addTitleDescription = this._addTitleDescription.bind(this);
   }
 
   _showStartDateTimePicker = () =>
@@ -88,7 +92,7 @@ class NewEvent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ createNewEvent: this._createNewEvent })
+    this.props.navigation.setParams({ addTitleDescription: this._addTitleDescription })
   }
 
   componentWillMount() {
@@ -191,7 +195,7 @@ class NewEvent extends React.Component {
     })
   }
 
-  _createNewEvent() {
+  _addTitleDescription() {
     if (this.state.newEvent.Start === undefined || this.state.newEvent.End === undefined) {
       Alert.alert(
        'Horaire',
@@ -215,6 +219,12 @@ class NewEvent extends React.Component {
      return
     }
 
+    this.setState({
+      dialogTitleDescVisible: true
+    })
+  }
+
+  _createNewEvent() {
     insertDate(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))
     .then(data => {
       console.log(data)
@@ -226,7 +236,7 @@ class NewEvent extends React.Component {
       })
 
       this.setState({
-        newEvent: {...this.state.newEvent, CreatedId: data.data[0].Id, IdUsers: idUsers}
+        newEvent: {...this.state.newEvent, CreatedId: data.data[0].Id, IdUsers: idUsers, Title: this.inputTitle, Description: this.inputDescription}
       }, () => {
         insertEventWithParticipant(this.state.newEvent)
           .then(data => {
@@ -245,6 +255,11 @@ class NewEvent extends React.Component {
           })
       })
 
+      this.setState({
+        dialogTitleDescVisible: false
+      })
+
+      this.props.navigation.navigate('HomePage')
     })
     .catch(error => {
       console.log(error)
@@ -293,9 +308,22 @@ class NewEvent extends React.Component {
     this.setState({ dialogVisible: false });
   };
 
+  _handleTitleCancel = () => {
+    this.setState({ dialogTitleDescVisible: false });
+  };
+
   render() {
     return (
       <LinearGradient colors={['#FFFFFF', '#949494']} style={styles.main_container}>
+        <Dialog.Container visible={ this.state.dialogTitleDescVisible }>
+          <Dialog.Description>
+            Remplissez le titre et la description de l'évènement.
+          </Dialog.Description>
+          <Dialog.Input style={styles.inputDialog} placeholder='Titre' onChangeText = {(text) => { this.inputTitle = text }}/>
+          <Dialog.Input style={styles.inputDialog} placeholder='Description' multiline={true} numberOfLines={4} onChangeText = {(text) => { this.inputDescription = text }}/>
+          <Dialog.Button label="Retour"  onPress={() => { this._handleTitleCancel() }} />
+          <Dialog.Button label="Ajouter" onPress={() => { this._createNewEvent() }} />
+        </Dialog.Container>
         <Dialog.Container visible={ this.state.dialogVisible }>
           <Dialog.Title>Ajout un participant</Dialog.Title>
           <Dialog.Description>
@@ -366,8 +394,8 @@ class NewEvent extends React.Component {
                 onConfirm={this._handleStartDatePicked}
                 onCancel={this._hideStartDateTimePicker}
                 mode={'datetime'}
+                date={new Date(moment(new Date()).add(1, 'h'))}
                 is24Hour={true}
-                date={new Date(moment(new Date()).add(1, 'h').format('YYYY-MM-DD HH:00'))}
                 minimumDate={new Date()}
                 datePickerModeAndroid={'spinner'}
               />
@@ -380,7 +408,7 @@ class NewEvent extends React.Component {
                 onConfirm={this._handleEndDatePicked}
                 onCancel={this._hideEndDateTimePicker}
                 mode={'datetime'}
-                date={new Date(moment(new Date()).add(2, 'h').format('YYYY-MM-DD HH:00'))}
+                date={new Date(moment(new Date()).add(2, 'h'))}
                 is24Hour={true}
                 minimumDate={new Date()}
                 datePickerModeAndroid={'spinner'}
