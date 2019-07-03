@@ -9,7 +9,7 @@ class InvitedPeopleItem extends React.Component {
     return (
       <TouchableOpacity
         style={styles.main_container}
-        onPress={() => displayInvitedPeopleDetail(invitedPeople.Id)}
+        onPress={() => displayInvitedPeopleDetail(invitedPeople)}
         onLongPress={() => deleteInvitedPeopleFromEvent(invitedPeople.Id)}>
         <Image
             style={styles.image}
@@ -21,6 +21,10 @@ class InvitedPeopleItem extends React.Component {
             <Text style={styles.date}>{invitedPeople.Email}</Text>
           </View>
         </View>
+        <Image
+            style={styles.image_next}
+            source={require('../Images/next.png')}
+        />
       </TouchableOpacity>
     )
   }

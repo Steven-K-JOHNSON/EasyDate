@@ -287,10 +287,10 @@ class NewEvent extends React.Component {
     })
   }
 
-  _displayInvitedPeopleDetail = (idPeople) => {
-    const eventIndex = this.state.events.findIndex(item => item.participantId === idPeople)
+  _displayInvitedPeopleDetail = (invitedPeople) => {
+    const eventIndex = this.state.events.findIndex(item => item.participantId === invitedPeople.Id)
 
-    this.props.navigation.navigate('InvitedPeopleDetail', {eventsDetail: this.state.events[eventIndex]})
+    this.props.navigation.navigate('InvitedPeopleDetail', {eventsDetail: this.state.events[eventIndex], invitedPeople: invitedPeople})
   }
 
   _deleteInvitedPeopleFromEvent = (idPeople) => {

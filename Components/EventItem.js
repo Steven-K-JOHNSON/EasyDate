@@ -46,13 +46,22 @@ class EventItem extends React.Component {
         </View>
       )
     } else {
-      const photoName = this.props.typeEvent.find((item) => item.Id === event.TypeId).Label
-      var icon = getImage(photoName)
+      var icon = undefined
+      if (event.IsPublic) {
+        const photoName = this.props.typeEvent.find((item) => item.Id === event.TypeId).Label
+        icon = getImage(photoName)
+      } else {
+        icon = require('../Images/spy.png')
+      }
 
       return (
         <TouchableOpacity
           style={styles.main_container}
-          onPress={() => displayDetailForEvent(event)}>
+          onPress={() => {
+            if (event.IsPublic) {
+              displayDetailForEvent(event)
+            }
+          }}>
           <Image
               style={styles.image}
               source={icon}
@@ -60,11 +69,11 @@ class EventItem extends React.Component {
           />
           <View style={styles.content_container}>
             <View style={styles.header_container}>
-              <Text style={[styles.title_text, {color: this.props.typeEvent.find((item) => item.Id === event.TypeId).Color }]}>{event.Title}</Text>
+              <Text style={[styles.title_text, {color: event.IsPublic ? this.props.typeEvent.find((item) => item.Id === event.TypeId).Color : 'black'}]}>{event.IsPublic ? event.Title : 'Privé'}</Text>
             </View>
             <View style={styles.description_container}>
               <Text style={styles.date}>{moment(new Date(event.Start)).format('DD')} {month[moment(new Date(event.Start)).format('M') - 1]} - {moment(new Date(event.End)).format('DD')} {month[moment(new Date(event.End)).format('M') - 1]}</Text>
-              <Text style={styles.people}>{ this.state.numberParticipants } pers.</Text>
+              <Text style={styles.people}>{ event.IsPublic ? this.state.numberParticipants : '+99' } pers.</Text>
             </View>
           </View>
           <Image
@@ -138,10 +147,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     margin: 10
-
-    // borderRadius: 80/2,
-    // borderColor: '#000000',
-    // margin: 10,
   }
 })
 

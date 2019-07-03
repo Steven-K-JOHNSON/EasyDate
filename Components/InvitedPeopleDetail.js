@@ -20,42 +20,18 @@ LocaleConfig.defaultLocale = 'fr';
 
 class InvitedPeopleDetail extends React.Component {
 
+  static navigationOptions = ({ navigation }) => ({
+
+    title: navigation.getParam('invitedPeople').LastName + ' ' + navigation.getParam('invitedPeople').Name
+  })
+
   constructor(props) {
     super(props)
     this.state = {
       events: [],
       eventsCalendar: undefined,
-      isLoading: true,
-      refreshing: false
+      isLoading: true
     }
-
-    this._loadAllEvent = this._loadAllEvent.bind(this);
-  }
-
-
-
-  _loadAllEvent() {
-    this.setState({
-      refreshing: true
-    }, () => {
-      getEventByIdUser(this.props.user.Id).then(data => {
-        data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
-        data.data.map(event => {
-          event.Start = moment(new Date(event.Start)).subtract(2, 'h')
-          event.End = moment(new Date(event.End)).subtract(2, 'h')
-        })
-        this.setState({
-          events: data.data,
-          isLoading: false,
-          refreshing: false
-        }, () => {
-          this.props.navigation.setParams({ eventNavigation: this.state.events })
-          this.setState({
-            eventsCalendar: displayAllEvent(this.state.events, this.props.typeEvent)
-          })
-        })
-      })
-    })
   }
 
   componentDidMount() {
@@ -112,8 +88,6 @@ class InvitedPeopleDetail extends React.Component {
           />
           <EventList
             events={this.props.navigation.getParam('eventsDetail').participantEvent}
-            loadAllEvent={this._loadAllEvent}
-            refreshing={this.state.refreshing}
             navigation={this.props.navigation}
           />
         </LinearGradient>

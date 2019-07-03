@@ -46,10 +46,7 @@ const AppStackNavigator = createStackNavigator({
     }
   },
   InvitedPeopleDetail: {
-    screen: InvitedPeopleDetail,
-    navigationOptions: {
-      title: 'Détail évènement'
-    }
+    screen: InvitedPeopleDetail
   }
 })
 
