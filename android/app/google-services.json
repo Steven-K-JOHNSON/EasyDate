@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "500341652713",
+    "firebase_url": "https://easydate-38702.firebaseio.com",
+    "project_id": "easydate-38702",
+    "storage_bucket": "easydate-38702.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500341652713:android:3a7fd30e1a845469",
+        "android_client_info": {
+          "package_name": "com.easydate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500341652713-im5e8nbtqqrfceba0uvrsnd90iplsvha.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXBcZT6cpnv-o5YDAsk91ibynOkboiqVs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500341652713-im5e8nbtqqrfceba0uvrsnd90iplsvha.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,6 @@
+framework module Pods_EasyDateTests {
+  umbrella header "Pods-EasyDateTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

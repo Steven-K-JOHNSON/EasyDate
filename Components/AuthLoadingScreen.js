@@ -5,7 +5,8 @@ import {
   StatusBar,
   StyleSheet,
   View,
-  Image
+  Image,
+  Alert
 } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'

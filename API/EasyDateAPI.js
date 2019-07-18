@@ -183,7 +183,7 @@ export function insertAgenda(groupId) {
   })
 }
 
-export function getSelfGroupByIdUser(id) {)
+export function getSelfGroupByIdUser(id) {
   return new Promise((resolve, reject) => {
     axios.post(urlRead + '/API/WEB/GET/group/getSelfGroupByIdUser', {
       AuthAPI: AUTH_API,
