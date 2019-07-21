@@ -18,6 +18,8 @@ class InvitedPeopleList extends React.Component {
   }
 
   render() {
+    console.log(this.props.invitedPeople)
+    console.log(JSON.stringify(this.props.invitedPeople))
     if (this.props.invitedPeople.length === 0) {
       return (
         <View style={styles.list_empty}>

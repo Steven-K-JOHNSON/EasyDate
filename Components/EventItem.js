@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, Text, Image, TouchableOpacity, Animated, Dimensions, ActivityIndicator, Alert } from 'react-native'
 // import FadeIn from '../Animations/FadeIn'
 import moment from 'moment'
 import { connect } from 'react-redux'

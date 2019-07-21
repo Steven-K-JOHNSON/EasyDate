@@ -247,7 +247,6 @@ class NewEvent extends React.Component {
         getSelfGroupByIdUser(this.props.user.Id)
           .then(selfGroup => {
             insertAgenda(selfGroup.data[0].Id)
-            // insertAgenda('6a56c73b-e3ed-48ef-99f6-b2d53b9fdafd')
               .then(agenda => {
 
                 var idUsers = []

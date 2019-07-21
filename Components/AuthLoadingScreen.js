@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { getEventType } from '../API/EasyDateAPI'
+import { getEventType, getUserInfo } from '../API/EasyDateAPI'
 
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -20,40 +20,44 @@ class AuthLoadingScreen extends React.Component {
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = () => {
     setTimeout(async () => {
-        const dateToken = await AsyncStorage.getItem('dateToken')
-        const dateToCheck = moment(dateToken).add(2, 'd')
-        const dateNow = moment(new Date())
-        if (dateNow.isAfter(dateToCheck)) {
-          await AsyncStorage.removeItem('dateToken')
-          await AsyncStorage.removeItem('userToken')
-        }
         const userToken = await AsyncStorage.getItem('userToken')
         if (userToken != null) {
-          const action = { type: "LOGIN_USER", value: JSON.parse(userToken) }
-          this.props.dispatch(action)
-        }
-
-        getEventType()
-          .then(data => {
-            const action = { type: "SET_TYPE_EVENT", value: data.data }
+          getUserInfo().then(data => {
+            const action = { type: "LOGIN_USER", value: data.data[0] }
             this.props.dispatch(action)
+            getEventType()
+              .then(data => {
+                const action = { type: "SET_TYPE_EVENT", value: data.data }
+                this.props.dispatch(action)
 
-            // This will switch to the App screen or Auth screen and this loading
-            // screen will be unmounted and thrown away.
-            this.props.navigation.navigate(userToken ? 'App' : 'Auth')
-          })
-          .catch(error => {
+                // This will switch to the App screen or Auth screen and this loading
+                // screen will be unmounted and thrown away.
+
+                this.props.navigation.navigate('App')
+              })
+              .catch(error => {
+                Alert.alert(
+                 'Problème',
+                 "Un problème est survenu lors de la récupération des types d'évènement.",
+                 [
+                   {text: 'OK'},
+                 ],
+                   {cancelable: false},
+                 )
+              })
+          }).catch(error => {
             Alert.alert(
              'Problème',
-             "Un problème est survenu lors de la récupération des types d'évènement.",
+             "Un problème est survenu lors de la connexion à l'application.",
              [
                {text: 'OK'},
              ],
                {cancelable: false},
              )
           })
-
-
+        } else {
+          this.props.navigation.navigate('Auth')
+        }
       },
       2000
     )

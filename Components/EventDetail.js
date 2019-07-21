@@ -1,7 +1,7 @@
 // Components/FilmDetail.js
 
 import React from 'react'
-import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, View, Text, ActivityIndicator, ScrollView, Image, TouchableOpacity, FlatList, Alert } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import PeopleItem from './PeopleItem'
 import moment from 'moment'

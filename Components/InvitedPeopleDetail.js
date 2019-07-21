@@ -22,7 +22,7 @@ class InvitedPeopleDetail extends React.Component {
 
   static navigationOptions = ({ navigation }) => ({
 
-    title: navigation.getParam('invitedPeople').LastName + ' ' + navigation.getParam('invitedPeople').Name
+    title: navigation.getParam('invitedPeople').Lastname + ' ' + navigation.getParam('invitedPeople').Name
   })
 
   constructor(props) {

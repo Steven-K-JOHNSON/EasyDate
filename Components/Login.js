@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Bu
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getUserByEAndP } from '../API/EasyDateAPI'
+import { getUserByEAndP, getUserInfo } from '../API/EasyDateAPI'
 import { connect } from 'react-redux'
 import CacheStore from 'react-native-cache-store'
 import moment from 'moment'
@@ -35,13 +35,43 @@ class Login extends React.Component {
       isLoading: true
     })
     getUserByEAndP(this.login, this.password).then(data => {
-      if (data.data.length !== 0) {
-        const action = { type: "LOGIN_USER", value: data.data[0] }
-        this.props.dispatch(action)
-        this.props.navigation.navigate('App')
-        AsyncStorage.setItem('userToken', JSON.stringify(data.data[0]))
-        const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
-        AsyncStorage.setItem('dateToken', dateToken)
+      if (data.data !== undefined) {
+        AsyncStorage.setItem('userToken', data.data.token)
+        getUserInfo().then(data => {
+          const action = { type: "LOGIN_USER", value: data.data[0] }
+          this.props.dispatch(action)
+          getEventType()
+            .then(data => {
+              const action = { type: "SET_TYPE_EVENT", value: data.data }
+              this.props.dispatch(action)
+
+              // This will switch to the App screen or Auth screen and this loading
+              // screen will be unmounted and thrown away.
+              this.props.navigation.navigate('App')
+            })
+            .catch(error => {
+              Alert.alert(
+               'Problème',
+               "Un problème est survenu lors de la récupération des types d'évènement.",
+               [
+                 {text: 'OK'},
+               ],
+                 {cancelable: false},
+               )
+            })
+        }).catch(error => {
+          Alert.alert(
+           'Problème',
+           "Un problème est survenu lors de la connexion à l'application.",
+           [
+             {text: 'OK'},
+           ],
+             {cancelable: false},
+           )
+          this.setState({
+            isLoading: false
+          })
+        })
       } else {
         Alert.alert(
          'Identifiants incorrects',

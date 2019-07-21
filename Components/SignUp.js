@@ -52,7 +52,7 @@ class SignUp extends React.Component {
 
     var newUser = {
       Name: this.name,
-      LastName: this.lastName,
+      LastName: this.lastname,
       PlayerName: this.playerName,
       Email: this.email,
       Password: this.password,

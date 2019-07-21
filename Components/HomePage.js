@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { getEventByIdUser } from '../API/EasyDateAPI'
+import { getEventOfUser } from '../API/EasyDateAPI'
 import { displayAllEvent } from '../Tools/CalendarTools'
 
 LocaleConfig.locales['fr'] = {
@@ -56,7 +56,7 @@ class HomePage extends React.Component {
       isLoading: true,
       refreshing: false
     }
-    
+
     this._loadAllEvent = this._loadAllEvent.bind(this);
   }
 
@@ -64,7 +64,7 @@ class HomePage extends React.Component {
     this.setState({
       refreshing: true
     }, () => {
-      getEventByIdUser(this.props.user.Id).then(data => {
+      getEventOfUser().then(data => {
         data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
         data.data.map(event => {
           event.Start = moment(new Date(event.Start)).subtract(2, 'h')
