@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>firebase_crashlytics_collection_enabled</key>
-	<string>false</string>
+	<string>true</string>
 	<key>CFBundleDisplayName</key>
 	<string>EasyDate</string>
 	<key>CFBundleExecutable</key>
