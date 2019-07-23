@@ -6,7 +6,7 @@ target 'EasyDate' do
   use_frameworks!
 
   # Pods for EasyDate
-  pod 'Firebase/Core'
+  pod 'Firebase/Core', '~> 6.3.0'
   pod 'Fabric', '~> 1.10.2'
   pod 'Crashlytics', '~> 3.13.2'
 

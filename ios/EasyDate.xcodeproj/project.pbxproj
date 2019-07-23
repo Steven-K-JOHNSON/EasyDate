@@ -36,7 +36,6 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* EasyDateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* EasyDateTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
-		2DFBBDC976D34B41878D9E45 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FFCD2FE7BF3467AA36472D4 /* libRNFirebase.a */; };
 		4CF6B80BECC5A278DFBF9952 /* Pods_EasyDate_tvOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CB58C8BCC53C86AA7695DA8 /* Pods_EasyDate_tvOSTests.framework */; };
 		53AE0F5F31D94124A25E4446 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 863B6C7A6A54472CAF731B73 /* libRNGestureHandler.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -442,7 +441,6 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				53AE0F5F31D94124A25E4446 /* libRNGestureHandler.a in Frameworks */,
 				A1A1AEC305E646B0A96D6B25 /* libBVLinearGradient.a in Frameworks */,
-				2DFBBDC976D34B41878D9E45 /* libRNFirebase.a in Frameworks */,
 				FF41E5D1E0C37962FFF11A4B /* Pods_EasyDate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
