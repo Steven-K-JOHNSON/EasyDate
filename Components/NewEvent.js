@@ -6,7 +6,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker'
 import InvitedPeopleList from './InvitedPeopleList'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { insertDate, insertEventWithParticipant, getUsersWithPaging, getEventByIdUser, insertAgenda, getSelfGroupByIdUser } from '../API/EasyDateAPI'
+import { insertEventWithParticipant, getAllUser, getEventOfUserId, insertAgenda, getSelfGroupByIdUser } from '../API/EasyDateAPI'
 import Dialog from "react-native-dialog"
 import { displayAllEvent } from '../Tools/CalendarTools'
 
@@ -104,22 +104,24 @@ class NewEvent extends React.Component {
       ],
       events: [{ participantId: this.props.user.Id, participantEvent: this.props.navigation.getParam('eventNavigation') }],
     }, () => {
-      var allEvent = []
-      this.state.events.map((events, index) => {
-        events.participantEvent.map(event => {
-          event = {...event, specificColor: index}
-          allEvent = [...allEvent, event]
+      if (this.state.events.length > 0) {
+        var allEvent = []
+        this.state.events.map((events, index) => {
+          events.participantEvent.map(event => {
+            event = {...event, specificColor: index}
+            allEvent = [...allEvent, event]
+          })
         })
-      })
 
-      this.setState({
-        eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
-      })
+        this.setState({
+          eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
+        })
+      }
     })
   }
 
   _addParticipant() {
-    getUsersWithPaging()
+    getAllUser()
       .then(data => {
         var participant = data.data.find(element => element.Email === this.inputInvitedPeople)
 
@@ -150,27 +152,34 @@ class NewEvent extends React.Component {
          return
         }
 
-        getEventByIdUser(participant.Id)
+        getEventOfUserId(participant.Id)
           .then(data => {
-            data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
-            data.data.map(event => {
-              event.Start = moment(new Date(event.Start)).subtract(2, 'h')
-              event.End = moment(new Date(event.End)).subtract(2, 'h')
-            })
-            this.setState({
-              events: [...this.state.events, { participantId: participant.Id, participantEvent: data.data }]
-            }, () => {
-              var allEvent = []
-              this.state.events.map((events, index) => {
-                events.participantEvent.map(event => {
-                  event = {...event, specificColor: index}
-                  allEvent = [...allEvent, event]
-                })
+            console.log(data)
+            if (data.status === 204) {
+              this.setState({
+                events: [...this.state.events, { participantId: participant.Id, participantEvent: [] }]
+              })
+            } else {
+              data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
+              data.data.map(event => {
+                event.Start = moment(new Date(event.Start)).subtract(2, 'h')
+                event.End = moment(new Date(event.End)).subtract(2, 'h')
               })
               this.setState({
-                eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
+                events: [...this.state.events, { participantId: participant.Id, participantEvent: data.data }]
+              }, () => {
+                var allEvent = []
+                this.state.events.map((events, index) => {
+                  events.participantEvent.map(event => {
+                    event = {...event, specificColor: index}
+                    allEvent = [...allEvent, event]
+                  })
+                })
+                this.setState({
+                  eventsCalendar: displayAllEvent(allEvent, this.props.typeEvent)
+                })
               })
-            })
+            }
           })
           .catch(error => {
             Alert.alert(
@@ -242,72 +251,34 @@ class NewEvent extends React.Component {
      return
     }
 
-    insertDate(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'))
-      .then(data => {
-        getSelfGroupByIdUser(this.props.user.Id)
-          .then(selfGroup => {
-            insertAgenda(selfGroup.data[0].Id)
-              .then(agenda => {
+    var idUsers = []
+    this.state.invitedPeople.map(people => {
+      idUsers = [...idUsers, people.Id]
+    })
 
-                var idUsers = []
-                this.state.invitedPeople.map(people => {
-                  idUsers = [...idUsers, people.Id]
-                })
-
-                this.setState({
-                  newEvent: {...this.state.newEvent, CreatedId: data.data[0].Id, IdUsers: idUsers, Title: this.inputTitle, Description: this.inputDescription, AgendaId: agenda.data[0].Id, Owner: this.props.user.Id}
-                }, () => {
-                  insertEventWithParticipant(this.state.newEvent)
-                    .then(data => {
-                      this.props.navigation.navigate('HomePage')
-                    })
-                    .catch(error => {
-                      Alert.alert(
-                       'Réseau',
-                       'Problème de réseau',
-                       [
-                         {text: 'OK'},
-                       ],
-                       {cancelable: false},
-                     )
-                    })
-                  })
-
-                  this.setState({
-                    dialogTitleDescVisible: false
-                  })
-                })
-              })
-              .catch(error => {
-                Alert.alert(
-                 'Problème',
-                 "Un problème est survenu lors de la création de l'agenda.",
-                 [
-                   {text: 'OK'},
-                 ],
-                   {cancelable: false},
-                 )
-              })
-          })
-          .catch(error => {
-            Alert.alert(
-             'Problème',
-             "Un problème est survenu lors de la récupération de votre groupe.",
-             [
-               {text: 'OK'},
-             ],
-               {cancelable: false},
-             )
-          })
-      .catch(error => {
-        Alert.alert(
-         'Problème',
-         "Un problème est survenu lors de la création de l'évènement.",
-         [
-           {text: 'OK'},
-         ],
+    this.setState({
+      newEvent: {...this.state.newEvent, IdUsers: idUsers, Title: this.inputTitle, Description: this.inputDescription, Owner: this.props.user.Id}
+    }, () => {
+      insertEventWithParticipant(this.state.newEvent)
+        .then(data => {
+          const loadAllEvent = this.props.navigation.getParam('loadAllEvent')
+          loadAllEvent()
+          this.props.navigation.navigate('HomePage')
+        })
+        .catch(error => {
+          Alert.alert(
+           'Réseau',
+           'Problème de réseau',
+           [
+             {text: 'OK'},
+           ],
            {cancelable: false},
          )
+        })
+      })
+
+      this.setState({
+        dialogTitleDescVisible: false
       })
   }
 

@@ -7,18 +7,16 @@ const axios = require('axios');
 const urlRead = "https://api-easydate.com"
 const urlWrite = "https://write.api-easydate.com"
 
-export function insertUserWithSelfGroup(newUser) {
+export function register(newUser) {
+  console.log(newUser)
   return new Promise((resolve, reject) => {
-    axios.post(urlWrite + '/API/WEB/SET/user/insertUserWithSelfGroup', {
+    axios.post(urlWrite + '/API/register', {
 
-      PlayerName: newUser.PlayerName,
+      Username: newUser.Username,
     	Name: newUser.Name,
     	Lastname: newUser.Lastname,
     	Email: newUser.Email,
     	Password: newUser.Password,
-    	Role: 2,
-    	GroupName: newUser.Name + ' ' + newUser.Lastname + ' Group',
-    	GroupDescription: newUser.Name + ' ' + newUser.Lastname + ' Group description',
     }, {
       headers: {
             'Content-Type': 'application/json',
@@ -41,14 +39,19 @@ export function getUserByEAndP(mail, password) {
             'Content-Type': 'application/json',
       }
     }).then(response => {
-      resolve(response)
+      console.log(response)
+      if (response.status === 204) {
+        reject()
+      } else {
+        resolve(response)
+      }
     }).catch(error => {
       reject(error);
     })
   });
 }
 
-export function getEventOfUser(id) {
+export function getEventOfUser() {
   return new Promise(async (resolve, reject) => {
     const userToken = await AsyncStorage.getItem('userToken')
     const authorization = 'bearer ' + userToken
@@ -75,8 +78,33 @@ export function getEventType() {
           'Authorization': authorization
       }
     }).then(response => {
+      console.log(response)
       resolve(response)
     }).catch(error => {
+      console.log(error)
+      reject(error)
+    })
+  })
+}
+
+export function getEventOfUserId(id) {
+  console.log("getEventOfUserId")
+  console.log(id)
+  return new Promise(async (resolve, reject) => {
+    const userToken = await AsyncStorage.getItem('userToken')
+    const authorization = 'bearer ' + userToken
+    axios.post(urlRead + '/API/MOBILE/GET/event/getEventOfUserId', {
+      Id: id
+    }, {
+      headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authorization
+      }
+    }).then(response => {
+      console.log(`getEventOfUserId ${JSON.stringify(response)}`)
+      resolve(response)
+    }).catch(error => {
+      console.log(`getEventOfUserId ERROR ${JSON.stringify(error)}`)
       reject(error)
     })
   })
@@ -101,34 +129,11 @@ export function getUserByIdEvent(id) {
   })
 }
 
-export function getUsersWithPaging() {
+export function getAllUser() {
   return new Promise(async (resolve, reject) => {
     const userToken = await AsyncStorage.getItem('userToken')
     const authorization = 'bearer ' + userToken
-    axios.post(urlRead + '/API/WEB/GET/user/getUsersWithPaging', {
-      NumPage: 1,
-      NbItem: 100000
-    }, {
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authorization
-      }
-    }).then(response => {
-      resolve(response)
-    }).catch(error => {
-      reject(error)
-    })
-  })
-}
-
-export function insertDate(date) {
-  return new Promise(async (resolve, reject) => {
-    const userToken = await AsyncStorage.getItem('userToken')
-    const authorization = 'bearer ' + userToken
-    axios.post(urlWrite + '/API/WEB/SET/Date/insertDate', {
-      Date: date,
-      Timezone: "2"
-    }, {
+    axios.get(urlRead + '/API/MOBILE/GET/user/getAllUser', {
       headers: {
           'Content-Type': 'application/json',
           'Authorization': authorization
@@ -145,40 +150,17 @@ export function insertEventWithParticipant(newEvent) {
   return new Promise(async (resolve, reject) => {
     const userToken = await AsyncStorage.getItem('userToken')
     const authorization = 'bearer ' + userToken
-    axios.post(urlWrite + '/API/MOBILE/SET/other/insertEventWithParticipant', {
+    axios.post(urlWrite + '/API/MOBILE/SET/event/insertEventWithParticipant', {
 
-      AgendaId: newEvent.AgendaId,
     	TypeId: newEvent.TypeId,
     	Start: moment(newEvent.Start).format('YYYY-MM-DD HH:mm'),
     	End: moment(newEvent.End).format('YYYY-MM-DD HH:mm'),
-    	CreatedId: newEvent.CreatedId,
+    	CreatedDate: moment(new Date()).format('YYYY-MM-DD HH:mm'),
     	Title: newEvent.Title,
     	Description: newEvent.Description,
-    	IsPublic: 1,
+    	IsPublic: true,
       Owner: newEvent.Owner,
     	IdUsers: newEvent.IdUsers
-    }, {
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authorization
-      }
-    }).then(response => {
-      resolve(response)
-    }).catch(error => {
-      reject(error)
-    })
-  })
-}
-
-export function insertAgenda(groupId) {
-  return new Promise(async (resolve, reject) => {
-    const userToken = await AsyncStorage.getItem('userToken')
-    const authorization = 'bearer ' + userToken
-    axios.post(urlWrite + '/API/WEB/SET/Agenda/insertAgenda', {
-      GroupId: groupId,
-    	DayEnd: "2020-12-12 23:59:59",
-    	DayStart: "2019-01-01 00:00:01",
-    	DefaultDuration: "10"
     }, {
       headers: {
           'Content-Type': 'application/json',
@@ -216,6 +198,25 @@ export function getUserInfo() {
     const userToken = await AsyncStorage.getItem('userToken')
     const authorization = 'bearer ' + userToken
     axios.get(urlRead + '/API/MOBILE/GET/user/getUserInfo', {
+      headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authorization
+      }
+    }).then(response => {
+      resolve(response)
+    }).catch(error => {
+      reject(error)
+    })
+  })
+}
+
+export function deleteParticipation(eventId) {
+  return new Promise(async (resolve, reject) => {
+    const userToken = await AsyncStorage.getItem('userToken')
+    const authorization = 'bearer ' + userToken
+    axios.post(urlWrite + '/API/MOBILE/SET/event/deleteParticipation', {
+      EventId: eventId
+    }, {
       headers: {
             'Content-Type': 'application/json',
             'Authorization': authorization

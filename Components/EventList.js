@@ -14,8 +14,10 @@ class EventList extends React.Component {
   _displayDetailForEvent = (eventDisplay) => {
     this.props.navigation.navigate('EventDetail', {event: eventDisplay})
   }
-  
+
   render() {
+    const { deleteEvent } = this.props
+
     if (this.props.events.length === 0) {
       return (
         <View style={styles.list_empty}>
@@ -39,6 +41,7 @@ class EventList extends React.Component {
             <EventItem
               event={item}
               displayDetailForEvent={this._displayDetailForEvent}
+              deleteEvent={deleteEvent}
             />
           )}
         />

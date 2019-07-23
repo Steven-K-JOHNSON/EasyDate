@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Bu
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { insertUserWithSelfGroup, getUserByEAndP } from '../API/EasyDateAPI'
+import { register, getUserByEAndP } from '../API/EasyDateAPI'
 import { connect } from 'react-redux'
 import CacheStore from 'react-native-cache-store'
 import moment from 'moment'
@@ -14,8 +14,8 @@ class SignUp extends React.Component {
   constructor(props) {
     super(props)
     this.name = ""
-    this.lastName = ""
-    this.playerName = ""
+    this.lastname = ""
+    this.username = ""
     this.email = ""
     this.password = ""
     this.state = {
@@ -34,7 +34,7 @@ class SignUp extends React.Component {
   }
 
   _createNewAccount() {
-    if (this.name === "" || this.lastName === "" || this.playerName === "" || this.email === "" || this.password === "") {
+    if (this.name.trim() === "" || this.lastname.trim() === "" || this.username.trim() === "" || this.email.trim() === "" || this.password.trim() === "") {
       Alert.alert(
        'Attention',
        'Veuillez remplir tous les champs avant de valider.',
@@ -50,43 +50,30 @@ class SignUp extends React.Component {
       isLoading: true
     })
 
+    this.name = this.name.trim()
+    this.lastname = this.lastname.trim()
+    this.username = this.username.trim()
+    this.email = this.email.trim()
+    this.password = this.password.trim()
+
     var newUser = {
       Name: this.name,
-      LastName: this.lastname,
-      PlayerName: this.playerName,
+      Lastname: this.lastname,
+      Username: this.username,
       Email: this.email,
       Password: this.password,
     }
 
-    insertUserWithSelfGroup(newUser).then(data => {
-      getUserByEAndP(this.email, this.password).then(data => {
-        if (data.data.length !== 0) {
-          const action = { type: "LOGIN_USER", value: data.data[0] }
-          this.props.dispatch(action)
-          this.props.navigation.navigate('App')
-          AsyncStorage.setItem('userToken', JSON.stringify(data.data[0]))
-          const dateToken = moment(new Date()).format('YYYY-MM-DD HH:mm')
-          AsyncStorage.setItem('dateToken', dateToken)
-        } else {
-          Alert.alert(
-           'Identifiants incorrects',
-           'Veuillez réessayer.',
-           [
-             {text: 'OK'},
-           ],
-           {cancelable: false},
-           )
-        }
-        this.setState({
-          isLoading: false
-        })
-      }).catch(error => {
-        this.setState({
-          isLoading: false
-        })
-      })
-
-
+    register(newUser).then(data => {
+      this.props.navigation.navigate('Login')
+      Alert.alert(
+       'Félicitation',
+       'Votre compte a bien été créé.\nVeuillez activer votre compte via le mail envoyé dans votre adresse mail.',
+       [
+         {text: 'OK'},
+       ],
+        {cancelable: false},
+       )
     }).catch(error => {
       Alert.alert(
        'Attention',
@@ -95,7 +82,7 @@ class SignUp extends React.Component {
          {
            text: 'Ok',
            onPress: () => {
-             this.playerNameTextInput.focus()
+             this.usernameTextInput.focus()
            }
          },
 
@@ -114,12 +101,12 @@ class SignUp extends React.Component {
     this.name = text
   }
 
-  _lastNameTextInputChange(text) {
-    this.lastName = text
+  _lastnameTextInputChange(text) {
+    this.lastname = text
   }
 
-  _playerNameTextInputChange(text) {
-    this.playerName = text
+  _usernameTextInputChange(text) {
+    this.username = text
   }
 
   _emailTextInputChange(text) {
@@ -148,13 +135,13 @@ class SignUp extends React.Component {
                 placeholder='Nom'
                 placeholderTextColor='#767676'
                 onSubmitEditing={() => { this.nameTextInput.focus() }}
-                onChangeText = {(text) => this._lastNameTextInputChange(text)}
+                onChangeText = {(text) => this._lastnameTextInputChange(text)}
                 returnKeyType='next'/>
               <TextInput
                 style={styles.text_input}
                 placeholder='Prénom'
                 placeholderTextColor='#767676'
-                onSubmitEditing={() => { this.playerNameTextInput.focus() }}
+                onSubmitEditing={() => { this.usernameTextInput.focus() }}
                 onChangeText = {(text) => this._nameTextInputChange(text)}
                 returnKeyType='next'
                 ref={(input) => { this.nameTextInput = input; }}/>
@@ -163,9 +150,9 @@ class SignUp extends React.Component {
                 placeholder="Nom d'utilisateur"
                 placeholderTextColor='#767676'
                 onSubmitEditing={() => { this.emailTextInput.focus() }}
-                onChangeText = {(text) => this._playerNameTextInputChange(text)}
+                onChangeText = {(text) => this._usernameTextInputChange(text)}
                 returnKeyType='next'
-                ref={(input) => { this.playerNameTextInput = input; }}/>
+                ref={(input) => { this.usernameTextInput = input; }}/>
               <TextInput
                 style={styles.text_input}
                 placeholder='Email'

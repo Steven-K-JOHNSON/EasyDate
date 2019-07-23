@@ -38,7 +38,7 @@ class EventItem extends React.Component {
   }
 
   render() {
-    const { event, displayDetailForEvent } = this.props
+    const { event, displayDetailForEvent, deleteEvent } = this.props
     if (this.state.isLoading) {
       return (
         <View style={styles.loading_container}>
@@ -57,6 +57,11 @@ class EventItem extends React.Component {
       return (
         <TouchableOpacity
           style={styles.main_container}
+          onLongPress={() => {
+            if (deleteEvent) {
+              deleteEvent(event.Id)
+            }
+          }}
           onPress={() => {
             if (event.IsPublic) {
               displayDetailForEvent(event)

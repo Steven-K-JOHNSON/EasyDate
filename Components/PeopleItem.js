@@ -13,7 +13,7 @@ class PeopleItem extends React.Component {
             source={people.avatar === undefined ? require('../Images/default_people.png') : {uri: people.Avatar}}
         />
         <Text style={styles.name}>{people.Name}</Text>
-        <Text style={styles.name}>{people.LastName}</Text>
+        <Text style={styles.name}>{people.Lastname}</Text>
         <Text style={styles.role}>{people.role}</Text>
       </TouchableOpacity>
     )

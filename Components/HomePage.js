@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { getEventOfUser } from '../API/EasyDateAPI'
+import { getEventOfUser, deleteParticipation } from '../API/EasyDateAPI'
 import { displayAllEvent } from '../Tools/CalendarTools'
 
 LocaleConfig.locales['fr'] = {
@@ -28,7 +28,8 @@ class HomePage extends React.Component {
                               onPress={() =>
                                 {
                                   const eventNavigation = navigation.getParam('eventNavigation')
-                                  navigation.navigate('NewEvent', {eventNavigation: eventNavigation})
+                                  const loadAllEvent = navigation.getParam('loadAllEvent')
+                                  navigation.navigate('NewEvent', {eventNavigation: eventNavigation, loadAllEvent: loadAllEvent})
                                 }}>
                               <Image
                                 style={styles.add_event}
@@ -58,6 +59,51 @@ class HomePage extends React.Component {
     }
 
     this._loadAllEvent = this._loadAllEvent.bind(this);
+    this._deleteEvent = this._deleteEvent.bind(this);
+  }
+
+  _deleteEvent(idEvent) {
+
+    Alert.alert(
+     'Attention',
+     "Êtes vous sur de ne plus vouloir participer à cette évènement ?",
+     [
+       {
+         text: 'Non',
+         style: 'cancel',
+       },
+       {
+         text: 'Oui',
+         onPress: () => {
+           deleteParticipation(idEvent)
+           .then(data => {
+             const eventIndex = this.state.events.findIndex(item => item.Id === idEvent)
+             if (eventIndex !== -1) {
+               const allEvents = this.state.events.filter((item, index) => index !== eventIndex)
+               this.setState({
+                 events: allEvents,
+                 eventsCalendar: displayAllEvent(allEvents, this.props.typeEvent)
+               }, () => {
+                 this.props.navigation.setParams({ eventNavigation: this.state.events })
+               })
+             }
+           })
+           .catch(error => {
+             Alert.alert(
+              'Problème',
+              "Un problème est survenu lors de la suppression d'un évènement.",
+              [
+                {text: 'OK'},
+              ],
+                {cancelable: false},
+              )
+           })
+
+         }
+       },
+     ],
+       {cancelable: false},
+     )
   }
 
   _loadAllEvent() {
@@ -65,21 +111,30 @@ class HomePage extends React.Component {
       refreshing: true
     }, () => {
       getEventOfUser().then(data => {
-        data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
-        data.data.map(event => {
-          event.Start = moment(new Date(event.Start)).subtract(2, 'h')
-          event.End = moment(new Date(event.End)).subtract(2, 'h')
-        })
-        this.setState({
-          events: data.data,
-          isLoading: false,
-          refreshing: false
-        }, () => {
-          this.props.navigation.setParams({ eventNavigation: this.state.events })
-          this.setState({
-            eventsCalendar: displayAllEvent(this.state.events, this.props.typeEvent)
+        if (data.status !== 204) {
+
+          data.data.sort((a, b) => new Date(...a.Start.split('/').reverse()) - new Date(...b.Start.split('/').reverse()));
+          data.data.map(event => {
+            event.Start = moment(new Date(event.Start)).subtract(2, 'h')
+            event.End = moment(new Date(event.End)).subtract(2, 'h')
           })
-        })
+          this.setState({
+            events: data.data,
+            isLoading: false,
+            refreshing: false
+          }, () => {
+            this.props.navigation.setParams({ eventNavigation: this.state.events })
+            this.setState({
+              eventsCalendar: displayAllEvent(this.state.events, this.props.typeEvent)
+            })
+          })
+        } else {
+          this.setState({
+            isLoading: false,
+            refreshing: false
+          })
+          this.props.navigation.setParams({ eventNavigation: [] })
+        }
       })
     })
   }
@@ -88,6 +143,7 @@ class HomePage extends React.Component {
     // Appel API pour recevoir tous les events d'un User
     this._loadAllEvent()
     this.props.navigation.setParams({ logout: this._signOutAsync })
+    this.props.navigation.setParams({ loadAllEvent: this._loadAllEvent })
   }
 
   _signOutAsync = () => {
@@ -153,6 +209,7 @@ class HomePage extends React.Component {
           <EventList
             events={this.state.events}
             loadAllEvent={this._loadAllEvent}
+            deleteEvent={this._deleteEvent}
             refreshing={this.state.refreshing}
             navigation={this.props.navigation}
           />

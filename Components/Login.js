@@ -4,7 +4,7 @@ import { Alert, StyleSheet, View, Text, Image, TextInput, InputAccessoryView, Bu
 import LinearGradient from 'react-native-linear-gradient'
 import HomePage from './HomePage'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getUserByEAndP, getUserInfo } from '../API/EasyDateAPI'
+import { getUserByEAndP, getUserInfo, getEventType } from '../API/EasyDateAPI'
 import { connect } from 'react-redux'
 import CacheStore from 'react-native-cache-store'
 import moment from 'moment'
@@ -34,66 +34,74 @@ class Login extends React.Component {
     this.setState({
       isLoading: true
     })
-    getUserByEAndP(this.login, this.password).then(data => {
-      if (data.data !== undefined) {
-        AsyncStorage.setItem('userToken', data.data.token)
-        getUserInfo().then(data => {
-          const action = { type: "LOGIN_USER", value: data.data[0] }
-          this.props.dispatch(action)
-          getEventType()
-            .then(data => {
-              const action = { type: "SET_TYPE_EVENT", value: data.data }
-              this.props.dispatch(action)
 
-              // This will switch to the App screen or Auth screen and this loading
-              // screen will be unmounted and thrown away.
-              this.props.navigation.navigate('App')
-            })
-            .catch(error => {
-              Alert.alert(
-               'Problème',
-               "Un problème est survenu lors de la récupération des types d'évènement.",
-               [
-                 {text: 'OK'},
-               ],
-                 {cancelable: false},
-               )
-            })
-        }).catch(error => {
+    getUserByEAndP(this.login, this.password)
+    .then(data => {
+      console.log(data)
+      AsyncStorage.setItem('userToken', data.data.token)
+
+      getUserInfo()
+      .then(data => {
+        const action = { type: "LOGIN_USER", value: data.data[0] }
+        this.props.dispatch(action)
+
+        getEventType()
+        .then(data => {
+          const action = { type: "SET_TYPE_EVENT", value: data.data }
+          this.props.dispatch(action)
+
+          // This will switch to the App screen or Auth screen and this loading
+          // screen will be unmounted and thrown away.
+          this.props.navigation.navigate('App')
+        })
+        .catch(error => {
           Alert.alert(
            'Problème',
-           "Un problème est survenu lors de la connexion à l'application.",
+           "Un problème est survenu lors de la récupération des types d'évènement.",
            [
              {text: 'OK'},
            ],
              {cancelable: false},
            )
-          this.setState({
-            isLoading: false
-          })
         })
-      } else {
+      })
+      .catch(error => {
         Alert.alert(
-         'Identifiants incorrects',
-         'Veuillez réessayer.',
+         'Problème',
+         "Un problème est survenu lors de la connexion à l'application (2).",
          [
            {text: 'OK'},
          ],
-         {cancelable: false},
+           {cancelable: false},
          )
-      }
+        this.setState({
+          isLoading: false
+        })
+      })
       this.setState({
         isLoading: false
       })
-    }).catch(error => {
-      Alert.alert(
-       'Problème',
-       "Un problème est survenu lors de la connexion à l'application.",
-       [
-         {text: 'OK'},
-       ],
-         {cancelable: false},
-       )
+    })
+    .catch(error => {
+      if (error && error.request && error.request.status === 449) {
+        Alert.alert(
+         'Compte non activé',
+         "Veuillez activer votre compte en cliquant sur le lien dans le mail.",
+         [
+           {text: 'OK'},
+         ],
+           {cancelable: false},
+         )
+      } else {
+        Alert.alert(
+         'Identifiants incorrects',
+         "Veuillez réessayer.",
+         [
+           {text: 'OK'},
+         ],
+           {cancelable: false},
+         )
+      }
       this.setState({
         isLoading: false
       })

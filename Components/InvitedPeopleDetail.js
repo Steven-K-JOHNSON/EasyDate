@@ -6,7 +6,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Calendar, CalendarList, Agenda, LocaleConfig } from 'react-native-calendars'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { getEventByIdUser } from '../API/EasyDateAPI'
 import { displayAllEvent } from '../Tools/CalendarTools'
 
 LocaleConfig.locales['fr'] = {
