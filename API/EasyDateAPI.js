@@ -4,8 +4,8 @@ import { AsyncStorage } from 'react-native'
 
 const axios = require('axios');
 
-const urlRead = "https://api-easydate.com"
-const urlWrite = "https://write.api-easydate.com"
+const urlRead = "http://api-easydate.com"
+const urlWrite = "http://write.api-easydate.com"
 
 export function register(newUser) {
   console.log(newUser)
@@ -46,6 +46,7 @@ export function getUserByEAndP(mail, password) {
         resolve(response)
       }
     }).catch(error => {
+      console.log(JSON.stringify(error))
       reject(error);
     })
   });
